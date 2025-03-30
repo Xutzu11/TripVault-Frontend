@@ -1,0 +1,61 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto; /* Center the table */
+}
+
+table, th, td {
+    border: 1px solid #333;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+th {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+tr:nth-child(even) {
+    background-color: #ddd;
+}
+
+tr:hover {
+    background-color: #ccc;
+}
+
+button {
+    background-color: #d4af37; /* Gold */
+    color: #333;
+    border: none;
+    border-radius: 12px; /* This will round your buttons */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #333;
+    color: #d4af37; /* Gold */
+}
