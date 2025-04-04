@@ -40,7 +40,7 @@ const AttractionCard = ({
                     alt={attraction.name}
                     height='140'
                     image={
-                        attraction.photo_path ||
+                        attraction.photoPath ||
                         '/static/images/cards/default.jpg'
                     }
                 />

@@ -1,11 +1,4 @@
-import {
-    Box,
-    CssBaseline,
-    Grid,
-    Pagination,
-    ThemeProvider,
-    Typography,
-} from '@mui/material';
+import {Box, CssBaseline, Grid, Pagination, ThemeProvider} from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -18,57 +11,10 @@ import theme from '../theme';
 import {Attraction} from '../types';
 
 function AttractionsPage() {
-    // Login Status
-    const [status, setStatus] = useState(false);
     const [refetch, setRefetch] = useState(false);
-    useEffect(() => {
-        const checkServerStatus = async () => {
-            try {
-                await axios.get(`${config.SERVER_URL}/api/status`);
-                setStatus(true);
-            } catch (error) {
-                setStatus(false);
-            }
-        };
-        checkServerStatus();
-        const interval = setInterval(checkServerStatus, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
     const nav = useNavigate();
 
-    const [name, setName] = useState('');
-
-    // data fetcher of attractions
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    nav('/');
-                    return;
-                }
-
-                const response = await axios.get(
-                    `${config.SERVER_URL}/api/access/user`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
-                    },
-                );
-
-                setName(response.data.fname);
-            } catch (error) {
-                nav('/');
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const [access, setAccess] = useState(false);
-
+    // Check if user has access
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -76,13 +22,6 @@ function AttractionsPage() {
                 if (!token) {
                     return;
                 }
-
-                await axios.get(`${config.SERVER_URL}/api/access/user`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                });
-                setAccess(true);
             } catch (error) {
                 return;
             }
@@ -93,62 +32,24 @@ function AttractionsPage() {
 
     const PAGE_ATTRACTIONS = 10;
 
-    const [currentP, setCurrentP] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const [attractions, setAttractions] = useState<Attraction[]>([]);
-    const [sortOpt, setSortOpt] = useState('');
+    const [sortingOption, setSortingOption] = useState('');
     const [totalAttractions, setTotalAttractions] = useState(0);
-    const settings = ['Profile', 'Logout'];
-    const [anchorElUser, setAnchorElUser] = useState(null);
-    const [anchorElCart, setAnchorElCart] = useState(null);
-    const [refetchCart, setRefetchCart] = useState(false);
 
-    const getCartItems = () => {
-        const cart = JSON.parse(localStorage.getItem('eventsCart') || '[]');
-        return cart;
-    };
-
-    const [cartItems, setCartItems] = useState(getCartItems());
-
-    const handleCartClick = (event) => {
-        setAnchorElCart(event.currentTarget);
-    };
-
-    const handleCloseCart = () => {
-        setAnchorElCart(null);
-    };
-
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
-
-    const calculateTotalPrice = (cart) => {
-        return cart
-            .reduce(
-                (total, item) => total + item.quantity * item.event.price,
-                0,
-            )
-            .toFixed(2);
-    };
-
-    // get the first 10 attractions with filters
+    // Get the first 10 attractions with filters
     useEffect(() => {
         axios
             .get(
-                `${config.SERVER_URL}/api/attractions/filtered/from/${(currentP - 1) * PAGE_ATTRACTIONS + 1}/to/${currentP * PAGE_ATTRACTIONS}`,
+                `${config.SERVER_URL}/api/attractions/filtered/from/${(currentPage - 1) * PAGE_ATTRACTIONS + 1}/to/${currentPage * PAGE_ATTRACTIONS}`,
                 {
                     params: {
-                        sortopt: sortOpt,
+                        sortingOption: sortingOption,
                         name: filters.name,
                         theme: filters.theme,
-                        minrev: filters.revenueRange[0],
-                        maxrev: filters.revenueRange[1],
                         state: filters.state,
                         city: filters.city,
-                        minrating: filters.rating,
+                        minimumRating: filters.rating,
                     },
                     headers: {
                         Authorization: localStorage.getItem('token'),
@@ -159,15 +60,9 @@ function AttractionsPage() {
                 console.log(response.data);
                 setAttractions(
                     response.data.map(
-                        (attraction) => new Attraction(attraction),
+                        (attraction: any) => new Attraction(attraction),
                     ),
                 );
-            })
-            .catch(function () {
-                const syncAttractions =
-                    localStorage.getItem('attractions') || '[]';
-                const parsedSyncAttractions = JSON.parse(syncAttractions);
-                setAttractions(parsedSyncAttractions);
             });
 
         axios
@@ -175,11 +70,9 @@ function AttractionsPage() {
                 params: {
                     name: filters.name,
                     theme: filters.theme,
-                    minrev: filters.revenueRange[0],
-                    maxrev: filters.revenueRange[1],
                     state: filters.state,
                     city: filters.city,
-                    minrating: filters.rating,
+                    minimumRating: filters.rating,
                 },
                 headers: {
                     Authorization: localStorage.getItem('token'),
@@ -187,53 +80,19 @@ function AttractionsPage() {
             })
             .then(function (response) {
                 setTotalAttractions(response.data);
-            })
-            .catch(function () {
-                const syncAttractions =
-                    localStorage.getItem('attractions') || '[]';
-                const parsedSyncAttractions = JSON.parse(syncAttractions);
-                setTotalAttractions(parsedSyncAttractions.length);
             });
-
         setRefetch(false);
-    }, [currentP, refetch]);
+    }, [currentPage, sortingOption, refetch]);
 
-    useEffect(() => {
-        if (status) {
-            const syncAttractions = localStorage.getItem('attractions') || '[]';
-            const parsedSyncAttractions = JSON.parse(syncAttractions);
-            parsedSyncAttractions.forEach((attraction: Attraction) => {
-                axios
-                    .post(
-                        `${config.SERVER_URL}/api/attraction/add`,
-                        attraction,
-                        {
-                            headers: {
-                                Authorization: localStorage.getItem('token'),
-                            },
-                        },
-                    )
-                    .then(function () {})
-                    .catch(function () {});
-            });
-            localStorage.setItem('attractions', JSON.stringify([]));
-        }
-        setCurrentP(1);
-        setRefetch(true);
-    }, [status]);
-
-    const handleDeleteAttractionItem = (attraction_id: number) => {
-        if (!access) {
-            window.alert('You must have admin rights in order to delete.');
-            return;
-        }
+    // Deleting an attraction
+    const handleDeleteAttractionItem = (attractionId: number) => {
         const confirmDelete = window.confirm(
             'Are you sure you want to delete this attraction?',
         );
         if (!confirmDelete) return;
         axios
             .delete(
-                `${config.SERVER_URL}/api/attraction/delete/${attraction_id}`,
+                `${config.SERVER_URL}/api/attraction/delete/${attractionId}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem('token'),
@@ -244,103 +103,48 @@ function AttractionsPage() {
                 console.log(response);
                 setAttractions((prevAttractions) =>
                     prevAttractions.filter(
-                        (attraction) => attraction.id !== attraction_id,
+                        (attraction) => attraction.id !== attractionId,
                     ),
                 );
                 window.alert('Attraction deleted.');
             })
             .catch(function (error) {
-                const syncAttractions =
-                    localStorage.getItem('attractions') || '[]';
-                const parsedSyncAttractions = JSON.parse(syncAttractions);
-                localStorage.setItem(
-                    'attractions',
-                    JSON.stringify(
-                        parsedSyncAttractions.filter(
-                            (attraction: Attraction) =>
-                                attraction.id !== attraction_id,
-                        ),
-                    ),
-                );
                 window.alert('Delete failed: ' + error.response.data);
             });
     };
 
-    useEffect(() => {
-        setCartItems(getCartItems());
-        setRefetchCart(false);
-    }, [refetchCart]);
-
-    const toAdd = () => {
-        nav(`/attractions/add`);
+    // Editing an attraction
+    const toEdit = (attractionId: number) => {
+        nav(`/attractions/` + String(attractionId));
     };
 
-    const toEdit = (attraction_id: number) => {
-        nav(`/attractions/` + String(attraction_id));
+    // Sorting attractions
+    const toSort = (event: any) => {
+        setSortingOption(event.target.value);
     };
 
-    const toSort = (event) => {
-        setSortOpt(event.target.value);
+    // Viewing events for an attraction
+    const toEventsAttraction = (attractionId: number) => {
+        nav('/events-attraction/' + String(attractionId));
     };
 
-    const toRevenue = () => {
-        nav(`/revenue_chart`);
+    // Changing the page
+    const handlePageChange = (_: any, value: any) => {
+        setCurrentPage(value);
     };
 
-    const toEvents = () => {
-        nav('/events');
-    };
-
-    const toEventsAttraction = (attraction_id: number) => {
-        nav('/events-attraction/' + String(attraction_id));
-    };
-
-    const toProfile = () => {
-        nav('/profile');
-    };
-
-    const toUsers = () => {
-        nav('/users');
-    };
-
-    const toMap = () => {
-        nav('/map');
-    };
-
-    const toCart = () => {
-        nav('/cart');
-    };
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('eventsCart');
-        nav('/');
-    };
-
-    useEffect(() => {
-        setRefetch(true);
-    }, [sortOpt]);
-
-    const handlePageChange = (event, value) => {
-        setCurrentP(value);
-    };
-
-    useEffect(() => {
-        setAttractions([]);
-    }, []);
-
+    // Filters
     const [filters, setFilters] = useState({
         name: '',
         theme: '',
-        revenueRange: [0, 1000000000] as [number, number],
         state: 0,
         city: 0,
         rating: 0,
     });
 
     const [states, setStates] = useState([]);
-    const [cities, setCities] = useState([]);
 
+    // Getting the states
     useEffect(() => {
         axios
             .get(`${config.SERVER_URL}/api/states`, {
@@ -352,6 +156,9 @@ function AttractionsPage() {
             .catch((error) => console.error('Error fetching states:', error));
     }, []);
 
+    const [cities, setCities] = useState([]);
+
+    // Getting the cities based on the selected state
     useEffect(() => {
         if (filters.state) {
             axios
@@ -370,7 +177,8 @@ function AttractionsPage() {
         }
     }, [filters.state]);
 
-    const handleFilterChange = (filterName, value) => {
+    // Handling filter changes
+    const handleFilterChange = (filterName: string, value: any) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
             [filterName]: value,
@@ -379,7 +187,7 @@ function AttractionsPage() {
     };
 
     const applyFilters = () => {
-        setCurrentP(1);
+        setCurrentPage(1);
         setRefetch(true);
     };
 
@@ -387,40 +195,18 @@ function AttractionsPage() {
         setFilters({
             name: '',
             theme: '',
-            revenueRange: [0, 1000000000],
             state: 0,
             city: 0,
             rating: 0,
         });
         setCities([]);
-        setCurrentP(1);
-        setRefetch(true);
-    };
-
-    const handleDeleteCartItem = (event_id: number) => {
-        const cart = JSON.parse(localStorage.getItem('eventsCart') || '[]');
-        const index = cart.findIndex((item) => item.event.id === event_id);
-
-        if (index !== -1) {
-            if (cart[index].quantity > 1) {
-                cart[index].quantity -= 1;
-            } else {
-                cart.splice(index, 1);
-            }
-            localStorage.setItem('eventsCart', JSON.stringify(cart));
-            setRefetchCart(true);
-        }
+        setCurrentPage(1);
     };
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <TopNavBar
-                name={name}
-                cartItems={cartItems}
-                onDeleteCartItem={handleDeleteCartItem}
-                calculateTotalPrice={calculateTotalPrice}
-            />
+            <TopNavBar />
             <Box
                 sx={{
                     padding: 3,
@@ -431,9 +217,6 @@ function AttractionsPage() {
                     backgroundPosition: 'center',
                 }}
             >
-                <Typography variant='subtitle1' align='center' color='error'>
-                    {status ? '' : 'Server is offline.'}
-                </Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={3}>
                         <FiltersPanel
@@ -443,7 +226,7 @@ function AttractionsPage() {
                             onFilterChange={handleFilterChange}
                             onApply={applyFilters}
                             onReset={resetFilters}
-                            sortOpt={sortOpt}
+                            sortingOption={sortingOption}
                             onSortChange={toSort}
                         />
                     </Grid>
@@ -467,7 +250,7 @@ function AttractionsPage() {
                 >
                     <Pagination
                         count={Math.ceil(totalAttractions / PAGE_ATTRACTIONS)}
-                        page={currentP}
+                        page={currentPage}
                         onChange={handlePageChange}
                         color='primary'
                     />

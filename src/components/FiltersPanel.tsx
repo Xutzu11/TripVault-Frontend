@@ -9,23 +9,14 @@ import {
     Typography,
 } from '@mui/material';
 
+import {City, State} from '../types';
+
 interface Filters {
     name: string;
     theme: string;
-    revenueRange: [number, number];
     state: number;
     city: number;
     rating: number;
-}
-
-interface State {
-    id: number;
-    name: string;
-}
-
-interface City {
-    id: number;
-    name: string;
 }
 
 interface FiltersPanelProps {
@@ -35,7 +26,7 @@ interface FiltersPanelProps {
     onFilterChange: (filterName: string, value: any) => void;
     onApply: () => void;
     onReset: () => void;
-    sortOpt: string;
+    sortingOption: string;
     onSortChange: (event: any) => void;
 }
 
@@ -46,7 +37,7 @@ const FiltersPanel = ({
     onFilterChange,
     onApply,
     onReset,
-    sortOpt,
+    sortingOption,
     onSortChange,
 }: FiltersPanelProps) => {
     return (
@@ -69,56 +60,6 @@ const FiltersPanel = ({
                     onChange={(e) => onFilterChange('theme', e.target.value)}
                     fullWidth
                 />
-                <Typography variant='body1' sx={{marginTop: 2}}>
-                    Revenue
-                </Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                        alignItems: 'center',
-                        marginTop: 1,
-                    }}
-                >
-                    <TextField
-                        label='Min'
-                        type='number'
-                        value={filters.revenueRange[0]}
-                        onChange={(e) =>
-                            onFilterChange('revenueRange', [
-                                Number(e.target.value),
-                                filters.revenueRange[1],
-                            ])
-                        }
-                        InputProps={{
-                            inputProps: {
-                                min: 0,
-                                max: 1000000000,
-                                step: 1000000,
-                            },
-                        }}
-                        fullWidth
-                    />
-                    <TextField
-                        label='Max'
-                        type='number'
-                        value={filters.revenueRange[1]}
-                        onChange={(e) =>
-                            onFilterChange('revenueRange', [
-                                filters.revenueRange[0],
-                                Number(e.target.value),
-                            ])
-                        }
-                        InputProps={{
-                            inputProps: {
-                                min: 0,
-                                max: 1000000000,
-                                step: 1000000,
-                            },
-                        }}
-                        fullWidth
-                    />
-                </Box>
                 <Typography variant='body1' sx={{marginTop: 2}}>
                     State
                 </Typography>
@@ -167,7 +108,7 @@ const FiltersPanel = ({
                 <Typography variant='body1' sx={{marginTop: 2}}>
                     Sort by
                 </Typography>
-                <Select fullWidth value={sortOpt} onChange={onSortChange}>
+                <Select fullWidth value={sortingOption} onChange={onSortChange}>
                     <MenuItem value='id'>-</MenuItem>
                     <MenuItem value='name'>Name</MenuItem>
                     <MenuItem value='revenue'>Revenue</MenuItem>

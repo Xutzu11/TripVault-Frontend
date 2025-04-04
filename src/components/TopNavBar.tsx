@@ -1,69 +1,40 @@
-import {AccountCircle, Remove, ShoppingCart} from '@mui/icons-material';
+import {AccountCircle, ShoppingCart} from '@mui/icons-material';
 import {
     AppBar,
     Box,
-    Button,
     Container,
     IconButton,
-    Menu,
-    MenuItem,
     Toolbar,
     Tooltip,
-    Typography,
 } from '@mui/material';
 import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import CartMenu from './CartMenu';
+import NavButton from './NavButton';
+import UserMenu from './UserMenu';
 
-interface TopNavBarProps {
-    name: string;
-    cartItems: any[];
-    onDeleteCartItem: (event_id: number) => void;
-    calculateTotalPrice: (cart: any[]) => string;
-}
-
-const TopNavBar = ({
-    name,
-    cartItems,
-    onDeleteCartItem,
-    calculateTotalPrice,
-}: TopNavBarProps) => {
-    const nav = useNavigate();
-
+const TopNavBar = () => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [anchorElCart, setAnchorElCart] = useState<null | HTMLElement>(null);
 
+    // Open user menu
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
     };
 
+    // Close user menu
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
 
+    // Open cart menu
     const handleCartClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElCart(event.currentTarget);
     };
 
+    // Close cart menu
     const handleCloseCart = () => {
         setAnchorElCart(null);
     };
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('eventsCart');
-        nav('/');
-    };
-
-    const toProfile = () => {
-        nav('/profile');
-    };
-
-    const toMap = () => nav('/map');
-    const toAdd = () => nav('/attractions/add');
-    const toEvents = () => nav('/events');
-    const toRevenue = () => nav('/revenue_chart');
-    const toUsers = () => nav('/users');
-    const toCart = () => nav('/cart');
 
     return (
         <AppBar position='sticky'>
@@ -86,41 +57,17 @@ const TopNavBar = ({
                             gap: 2,
                         }}
                     >
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={toMap}
-                        >
-                            Map
-                        </Button>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={toAdd}
-                        >
-                            Add attraction
-                        </Button>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={toEvents}
-                        >
-                            Events
-                        </Button>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={toRevenue}
-                        >
-                            See revenue
-                        </Button>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={toUsers}
-                        >
-                            Users
-                        </Button>
+                        <NavButton label='Map' navigation='/map' />
+                        <NavButton
+                            label='Attractions'
+                            navigation='/attractions/add'
+                        />
+                        <NavButton label='Events' navigation='/events' />
+                        <NavButton
+                            label='Revenue chart'
+                            navigation='/revenue_chart'
+                        />
+                        <NavButton label='Users' navigation='/users' />
                     </Box>
                     <Box
                         sx={{
@@ -130,7 +77,6 @@ const TopNavBar = ({
                             gap: 2,
                         }}
                     >
-                        <Typography sx={{padding: 2}}>{name}</Typography>
                         <Tooltip title='Open cart'>
                             <IconButton onClick={handleCartClick} sx={{p: 0}}>
                                 <ShoppingCart sx={{fontSize: '40px'}} />
@@ -144,124 +90,16 @@ const TopNavBar = ({
                                 <AccountCircle sx={{fontSize: '40px'}} />
                             </IconButton>
                         </Tooltip>
-                        <Menu
-                            sx={{mt: '45px'}}
-                            id='menu-appbar'
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            <MenuItem
-                                onClick={() => {
-                                    handleCloseUserMenu();
-                                    toProfile();
-                                }}
-                            >
-                                <Typography textAlign='center'>
-                                    Profile
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    handleCloseUserMenu();
-                                    logout();
-                                }}
-                            >
-                                <Typography textAlign='center'>
-                                    Logout
-                                </Typography>
-                            </MenuItem>
-                        </Menu>
-                        <Menu
-                            sx={{mt: '45px'}}
-                            id='menu-cart'
+                        <CartMenu
                             anchorEl={anchorElCart}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
                             open={Boolean(anchorElCart)}
                             onClose={handleCloseCart}
-                        >
-                            <Box sx={{padding: 2, minWidth: 300}}>
-                                <Typography variant='h6'>
-                                    Shopping cart
-                                </Typography>
-                                {cartItems.length === 0 ? (
-                                    <Typography>Your cart is empty.</Typography>
-                                ) : (
-                                    cartItems.map((item, index) => (
-                                        <Box
-                                            key={index}
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                padding: 1,
-                                            }}
-                                        >
-                                            <Typography>
-                                                {item.event.name} (x
-                                                {item.quantity})
-                                            </Typography>
-                                            <Typography>
-                                                $
-                                                {(
-                                                    item.quantity *
-                                                    item.event.price
-                                                ).toFixed(2)}
-                                            </Typography>
-                                            <IconButton
-                                                size='small'
-                                                color='secondary'
-                                                onClick={() =>
-                                                    onDeleteCartItem(
-                                                        item.event.id,
-                                                    )
-                                                }
-                                            >
-                                                <Remove />
-                                            </IconButton>
-                                        </Box>
-                                    ))
-                                )}
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        padding: 1,
-                                        borderTop: '1px solid #ddd',
-                                        marginTop: 1,
-                                    }}
-                                >
-                                    <Typography variant='h6'>Total</Typography>
-                                    <Typography variant='h6'>
-                                        ${calculateTotalPrice(cartItems)}
-                                    </Typography>
-                                </Box>
-                                <Button
-                                    variant='contained'
-                                    color='primary'
-                                    sx={{marginTop: 2, width: '100%'}}
-                                    onClick={toCart}
-                                >
-                                    Go to Cart
-                                </Button>
-                            </Box>
-                        </Menu>
+                        />
+                        <UserMenu
+                            anchorEl={anchorElUser}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        />
                     </Box>
                 </Toolbar>
             </Container>
