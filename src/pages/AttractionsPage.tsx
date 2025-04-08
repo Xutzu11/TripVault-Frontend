@@ -1,13 +1,13 @@
-import {Box, CssBaseline, Grid, Pagination, ThemeProvider} from '@mui/material';
+import {Box, CssBaseline, Grid, Pagination} from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../App.css';
 import AttractionCard from '../components/AttractionCard';
 import FiltersPanel from '../components/FiltersPanel';
+import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
-import theme from '../theme';
 import {Attraction} from '../types';
 
 function AttractionsPage() {
@@ -204,7 +204,7 @@ function AttractionsPage() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
             <CssBaseline />
             <TopNavBar />
             <Box
@@ -256,7 +256,8 @@ function AttractionsPage() {
                     />
                 </Box>
             </Box>
-        </ThemeProvider>
+            <Footer />
+        </>
     );
 }
 

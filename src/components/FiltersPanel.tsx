@@ -99,7 +99,7 @@ const FiltersPanel = ({
                 </Typography>
                 <Slider
                     value={filters.rating}
-                    onChange={(e, value) => onFilterChange('rating', value)}
+                    onChange={(_, value) => onFilterChange('rating', value)}
                     valueLabelDisplay='auto'
                     min={0}
                     max={5}
