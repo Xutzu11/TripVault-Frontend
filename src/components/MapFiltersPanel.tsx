@@ -1,4 +1,9 @@
 import {
+    DirectionsCar,
+    DirectionsTransit,
+    DirectionsWalk,
+} from '@mui/icons-material';
+import {
     Box,
     Button,
     Card,
@@ -17,6 +22,8 @@ interface MapFiltersPanelProps {
     setMaxDistance: (value: number) => void;
     onSearchRoute: () => void;
     onResetFilters: () => void;
+    transportMode: google.maps.TravelMode;
+    setTransportMode: (mode: google.maps.TravelMode) => void;
 }
 
 const MapFiltersPanel = ({
@@ -28,6 +35,8 @@ const MapFiltersPanel = ({
     setMaxDistance,
     onSearchRoute,
     onResetFilters,
+    transportMode,
+    setTransportMode,
 }: MapFiltersPanelProps) => {
     return (
         <Box
@@ -43,7 +52,7 @@ const MapFiltersPanel = ({
                 <CardContent>
                     <Typography variant='h6'>Filters</Typography>
                     <Typography sx={{marginTop: 2}} variant='subtitle2'>
-                        Minimum rating
+                        Minimum Rating
                     </Typography>
                     <Slider
                         value={minRating}
@@ -54,7 +63,7 @@ const MapFiltersPanel = ({
                         valueLabelDisplay='auto'
                     />
                     <Typography sx={{marginTop: 1}} variant='subtitle2'>
-                        Maximum number of attractions
+                        Maximum Attractions
                     </Typography>
                     <TextField
                         type='number'
@@ -71,7 +80,7 @@ const MapFiltersPanel = ({
                         fullWidth
                     />
                     <Typography sx={{marginTop: 1}} variant='subtitle2'>
-                        Maximum distance (km)
+                        Maximum Distance (km)
                     </Typography>
                     <Slider
                         value={maxDistance}
@@ -81,6 +90,50 @@ const MapFiltersPanel = ({
                         step={0.5}
                         valueLabelDisplay='auto'
                     />
+                    <Typography variant='subtitle2' sx={{marginBottom: 1}}>
+                        Transport Mode
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 2, marginBottom: 2}}>
+                        <DirectionsWalk
+                            sx={{
+                                color:
+                                    transportMode ===
+                                    google.maps.TravelMode.WALKING
+                                        ? '#ad9267'
+                                        : 'white',
+                                cursor: 'pointer',
+                            }}
+                            onClick={() =>
+                                setTransportMode(google.maps.TravelMode.WALKING)
+                            }
+                        />
+                        <DirectionsTransit
+                            sx={{
+                                color:
+                                    transportMode ===
+                                    google.maps.TravelMode.TRANSIT
+                                        ? '#ad9267'
+                                        : 'white',
+                                cursor: 'pointer',
+                            }}
+                            onClick={() =>
+                                setTransportMode(google.maps.TravelMode.TRANSIT)
+                            }
+                        />
+                        <DirectionsCar
+                            sx={{
+                                color:
+                                    transportMode ===
+                                    google.maps.TravelMode.DRIVING
+                                        ? '#ad9267'
+                                        : 'white',
+                                cursor: 'pointer',
+                            }}
+                            onClick={() =>
+                                setTransportMode(google.maps.TravelMode.DRIVING)
+                            }
+                        />
+                    </Box>
                     <Button
                         sx={{marginTop: 1, marginRight: 3}}
                         variant='contained'
