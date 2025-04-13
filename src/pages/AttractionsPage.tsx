@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../App.css';
 import AttractionCard from '../components/AttractionCard';
-import FiltersPanel from '../components/FiltersPanel';
+import AttractionsFiltersPanel from '../components/AttractionsFiltersPanel';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
@@ -219,7 +219,7 @@ function AttractionsPage() {
             >
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={3}>
-                        <FiltersPanel
+                        <AttractionsFiltersPanel
                             filters={filters}
                             states={states}
                             cities={cities}

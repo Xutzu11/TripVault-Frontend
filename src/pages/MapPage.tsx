@@ -64,7 +64,7 @@ const MapPage = () => {
         lng: number;
     } | null>(null);
     const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-    const [routeIndex, setRouteIndex] = useState(0);
+    const [routeIndex, _] = useState(0);
     const [legIndex, setLegIndex] = useState(0);
     const [directions, setDirections] =
         useState<google.maps.DirectionsResult | null>(null);
@@ -75,7 +75,15 @@ const MapPage = () => {
     const [maxDistance, setMaxDistance] = useState(20);
     const [refetchRoute, setRefetchRoute] = useState(false);
     const [transportMode, setTransportMode] = useState<google.maps.TravelMode>(
-        google.maps.TravelMode.WALKING,
+        () => {
+            return (
+                window.google?.maps?.TravelMode ?? {
+                    WALKING: 'WALKING',
+                    DRIVING: 'DRIVING',
+                    TRANSIT: 'TRANSIT',
+                }
+            ).WALKING;
+        },
     );
     const nav = useNavigate();
 

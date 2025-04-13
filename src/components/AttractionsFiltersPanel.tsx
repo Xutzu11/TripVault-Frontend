@@ -30,7 +30,7 @@ interface FiltersPanelProps {
     onSortChange: (event: any) => void;
 }
 
-const FiltersPanel = ({
+const AttractionsFiltersPanel = ({
     filters,
     states,
     cities,
@@ -134,4 +134,4 @@ const FiltersPanel = ({
     );
 };
 
-export default FiltersPanel;
+export default AttractionsFiltersPanel;

@@ -60,7 +60,7 @@ const TopNavBar = () => {
                         <NavButton label='Map' navigation='/map' />
                         <NavButton
                             label='Attractions'
-                            navigation='/attractions/add'
+                            navigation='/attractions'
                         />
                         <NavButton label='Events' navigation='/events' />
                         <NavButton

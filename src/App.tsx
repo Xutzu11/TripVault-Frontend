@@ -7,9 +7,9 @@ import EditExhibition from './EditExhibition';
 import EditMuseum from './EditMuseum';
 import EditUser from './EditUser';
 import ExhibitionsOnMuseum from './ExhibitionsOnMuseum';
-import ExhibitionsPage from './ExhibitionsPage';
 import LoginPage from './LoginPage';
 import AttractionsPage from './pages/AttractionsPage';
+import EventsPage from './pages/EventsPage';
 import MapPage from './pages/MapPage';
 import ProfilePage from './ProfilePage';
 import RegisterPage from './RegisterPage';
@@ -41,7 +41,7 @@ function App() {
                         element={<EditExhibition />}
                     />
                     <Route path='/revenue_chart' element={<RevenueChart />} />
-                    <Route path='/exhibitions' element={<ExhibitionsPage />} />
+                    <Route path='/events' element={<EventsPage />} />
                     <Route path='/users' element={<UsersPage />} />
                     <Route path='/users/:userID' element={<EditUser />} />
                     <Route path='/map' element={<MapPage />} />
