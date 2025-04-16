@@ -2,15 +2,7 @@ import {Remove} from '@mui/icons-material';
 import {Box, Button, IconButton, Menu, Typography} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-
-interface CartItem {
-    event: {
-        id: number;
-        name: string;
-        price: number;
-    };
-    quantity: number;
-}
+import {CartItem} from '../types';
 
 interface CartMenuProps {
     anchorEl: HTMLElement | null;
@@ -66,6 +58,14 @@ const CartMenu = ({anchorEl, open, onClose}: CartMenuProps) => {
     const toCart = () => {
         nav('/cart');
     };
+
+    // Function to handle updates to the cart
+    useEffect(() => {
+        const updateCart = () => setCartItems(getCartItems());
+
+        window.addEventListener('cartUpdated', updateCart);
+        return () => window.removeEventListener('cartUpdated', updateCart);
+    }, []);
 
     return (
         <Menu

@@ -1,17 +1,4 @@
 // types.ts
-export interface Exhibition {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    startDate: string;
-    endDate: string;
-}
-
-export interface CartItem {
-    quantity: number;
-    exhibition: Exhibition;
-}
 
 export class Attraction {
     id: number;
@@ -37,6 +24,24 @@ export class Attraction {
     }
 }
 
+export class Event {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    startDate: string;
+    endDate: string;
+
+    constructor(data: any) {
+        this.id = Number(data.id);
+        this.name = data.name;
+        this.description = data.description;
+        this.price = parseFloat(data.price);
+        this.startDate = data.startDate;
+        this.endDate = data.endDate;
+    }
+}
+
 export interface State {
     id: number;
     name: string;
@@ -45,4 +50,9 @@ export interface State {
 export interface City {
     id: number;
     name: string;
+}
+
+export interface CartItem {
+    event: Event;
+    quantity: number;
 }

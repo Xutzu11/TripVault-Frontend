@@ -2,15 +2,16 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import AddExhibition from './AddExhibition';
 import AddMuseum from './AddMuseum';
 import './App.css';
-import CartPage from './CartPage';
 import EditExhibition from './EditExhibition';
 import EditMuseum from './EditMuseum';
 import EditUser from './EditUser';
 import ExhibitionsOnMuseum from './ExhibitionsOnMuseum';
 import LoginPage from './LoginPage';
 import AttractionsPage from './pages/AttractionsPage';
+import CartPage from './pages/CartPage';
 import EventsPage from './pages/EventsPage';
 import MapPage from './pages/MapPage';
+import SuccessPage from './pages/SuccessPage';
 import ProfilePage from './ProfilePage';
 import RegisterPage from './RegisterPage';
 import RevenueChart from './RevenueChart';
@@ -46,6 +47,7 @@ function App() {
                     <Route path='/users/:userID' element={<EditUser />} />
                     <Route path='/map' element={<MapPage />} />
                     <Route path='/cart' element={<CartPage />} />
+                    <Route path='/success' element={<SuccessPage />} />
                 </Routes>
             </BrowserRouter>
         </>

@@ -113,22 +113,31 @@ const AttractionsFiltersPanel = ({
                     <MenuItem value='name'>Name</MenuItem>
                     <MenuItem value='revenue'>Revenue</MenuItem>
                 </Select>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    onClick={onApply}
-                    sx={{marginTop: 2, marginRight: 2}}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: 2,
+                        marginTop: 2,
+                    }}
                 >
-                    Apply Filters
-                </Button>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    onClick={onReset}
-                    sx={{marginTop: 2}}
-                >
-                    Reset Filters
-                </Button>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        fullWidth
+                        onClick={onApply}
+                    >
+                        Apply
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        fullWidth
+                        onClick={onReset}
+                    >
+                        Reset
+                    </Button>
+                </Box>
             </Box>
         </Card>
     );

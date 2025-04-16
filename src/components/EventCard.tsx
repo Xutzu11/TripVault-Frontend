@@ -14,6 +14,25 @@ interface EventCardProps {
 }
 
 const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
+    const addToCart = () => {
+        const cart = JSON.parse(localStorage.getItem('eventsCart') || '[]');
+        const index = cart.findIndex((item: any) => item.event.id === event.id);
+
+        if (index !== -1) {
+            cart[index].quantity += 1;
+        } else {
+            cart.push({
+                event: event,
+                quantity: 1,
+            });
+        }
+
+        localStorage.setItem('eventsCart', JSON.stringify(cart));
+
+        // Optional: Dispatch a custom event to notify other components like CartMenu
+        window.dispatchEvent(new Event('cartUpdated'));
+    };
+
     return (
         <Card
             sx={{
@@ -32,12 +51,15 @@ const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
                     {event.description}
                 </Typography>
                 <Typography variant='body2' color='textSecondary'>
-                    Price: ${event.price}
-                    {/* TODO: make price fixed to 2 decimal places */}
+                    Price: ${parseFloat(event.price).toFixed(2)}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size='small' color='primary' onClick={() => onEdit(id)}>
+                <Button
+                    size='small'
+                    color='primary'
+                    onClick={() => onEdit(event.id)}
+                >
                     Edit
                 </Button>
                 <Button
@@ -46,6 +68,9 @@ const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
                     onClick={() => onDelete(event.id)}
                 >
                     Delete
+                </Button>
+                <Button size='small' color='success' onClick={addToCart}>
+                    Add to Cart
                 </Button>
             </CardActions>
         </Card>
