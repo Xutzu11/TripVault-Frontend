@@ -1,4 +1,3 @@
-// CartPage.tsx
 import {Check} from '@mui/icons-material';
 import {
     Box,
@@ -43,7 +42,6 @@ const CartPage = () => {
 
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [isPurchased, setIsPurchased] = useState(false);
     const nav = useNavigate();
 
     useEffect(() => {
@@ -199,9 +197,9 @@ const CartPage = () => {
                                             size={24}
                                             color='inherit'
                                         />
-                                    ) : isPurchased ? (
+                                    ) : (
                                         <Check />
-                                    ) : null
+                                    )
                                 }
                             >
                                 {isProcessing

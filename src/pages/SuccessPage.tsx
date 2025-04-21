@@ -30,7 +30,29 @@ const SuccessPage = () => {
             .then((res) => {
                 if (res.data.paid) {
                     setValid(true);
-                    // TODO: handle successful payment
+                    // call api/purchase with axios
+                    try {
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            nav('/');
+                            return;
+                        }
+                        const events = localStorage.getItem('eventsCart');
+                        const parsedEvents = JSON.parse(events || '[]');
+                        axios.post(
+                            `${config.SERVER_URL}/api/purchase`,
+                            {
+                                cart: parsedEvents,
+                            },
+                            {
+                                headers: {
+                                    Authorization: token,
+                                },
+                            },
+                        );
+                    } catch (error) {
+                        console.error('Error purchasing:', error);
+                    }
                     localStorage.removeItem('eventsCart');
                 } else {
                     nav('/');

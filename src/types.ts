@@ -14,18 +14,19 @@ export class Attraction {
     constructor(data: any) {
         this.id = Number(data.id);
         this.name = data.name;
-        this.cityId = Number(data.cityId);
+        this.cityId = Number(data.city_id);
         this.theme = data.theme;
         this.revenue = parseFloat(data.revenue);
         this.rating = parseFloat(data.rating);
         this.latitude = parseFloat(data.latitude);
         this.longitude = parseFloat(data.longitude);
-        this.photoPath = data.photoPath;
+        this.photoPath = data.photo_path;
     }
 }
 
 export class Event {
     id: number;
+    attractionId: number;
     name: string;
     description: string;
     price: number;
@@ -34,11 +35,12 @@ export class Event {
 
     constructor(data: any) {
         this.id = Number(data.id);
+        this.attractionId = Number(data.attraction_id);
         this.name = data.name;
         this.description = data.description;
         this.price = parseFloat(data.price);
-        this.startDate = data.startDate;
-        this.endDate = data.endDate;
+        this.startDate = data.start_date;
+        this.endDate = data.end_date;
     }
 }
 

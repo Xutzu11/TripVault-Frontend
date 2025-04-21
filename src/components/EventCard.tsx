@@ -6,14 +6,16 @@ import {
     CardContent,
     Typography,
 } from '@mui/material';
+import {Event as AttractionEvent} from '../types';
 
 interface EventCardProps {
-    event: any;
+    event: AttractionEvent;
     onEdit: (id: number) => void;
     onDelete: (id: number) => void;
 }
 
 const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
+    console.log('EventCard', event);
     const addToCart = () => {
         const cart = JSON.parse(localStorage.getItem('eventsCart') || '[]');
         const index = cart.findIndex((item: any) => item.event.id === event.id);
@@ -51,7 +53,7 @@ const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
                     {event.description}
                 </Typography>
                 <Typography variant='body2' color='textSecondary'>
-                    Price: ${parseFloat(event.price).toFixed(2)}
+                    Price: ${event.price.toFixed(2)}
                 </Typography>
             </CardContent>
             <CardActions>
