@@ -1,6 +1,6 @@
 'use client';
 
-import {LocationOn} from '@mui/icons-material';
+import {ArrowBack, LocationOn} from '@mui/icons-material';
 import {Button} from '@mui/material';
 import {useLoadScript} from '@react-google-maps/api';
 import {AdvancedMarker, APIProvider, Map, Pin} from '@vis.gl/react-google-maps';
@@ -12,10 +12,10 @@ import Directions from '../components/Directions';
 import LoadingScreen from '../components/LoadingScreen';
 import MapFiltersPanel from '../components/MapFiltersPanel';
 import Markers from '../components/Markers';
-import NavButton from '../components/NavButton';
 import PlacesAutocompleteBox from '../components/PlacesAutocompleteBox';
 import RouteInfoCard from '../components/RouteInfoCard';
 import UserMarker from '../components/UserMarker';
+import UserPromptInput from '../components/UserPrompInput';
 import config from '../config.json';
 import {Attraction} from '../types';
 
@@ -166,16 +166,19 @@ const MapPage = () => {
                 >
                     <LocationOn />
                 </Button>
-                <NavButton
-                    label='Main page'
-                    navigation='/attractions'
+                <Button
+                    variant='contained'
+                    color='primary'
                     sx={{
                         position: 'fixed',
                         bottom: 3,
                         left: 4,
                         zIndex: 10,
                     }}
-                />
+                    onClick={() => nav(-1)}
+                >
+                    <ArrowBack />
+                </Button>
                 <Map
                     fullscreenControl={false}
                     mapId={config.NEXT_PUBLIC_MAP_ID}
@@ -252,6 +255,7 @@ const MapPage = () => {
                     setTransportMode={setTransportMode}
                 />
             </div>
+            <UserPromptInput />
         </APIProvider>
     ) : (
         <LoadingScreen />

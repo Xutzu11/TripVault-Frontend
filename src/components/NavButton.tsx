@@ -2,7 +2,7 @@ import {Button} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 
 interface NavButtonProps {
-    label: string;
+    label: any;
     navigation: string;
     sx?: any;
 }
