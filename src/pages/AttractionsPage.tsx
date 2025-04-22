@@ -13,21 +13,35 @@ import {Attraction} from '../types';
 function AttractionsPage() {
     const [refetch, setRefetch] = useState(false);
     const nav = useNavigate();
+    const [userType, setUserType] = useState('');
 
     // Check if user has access
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    return;
-                }
-            } catch (error) {
-                return;
-            }
-        };
-
-        fetchData();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            nav('/');
+            return;
+        }
+        axios
+            .get(`${config.SERVER_URL}/api/access/user`, {
+                headers: {Authorization: token},
+            })
+            .then((_) => {
+                setUserType('user');
+            })
+            .catch((_) => {
+                axios
+                    .get(`${config.SERVER_URL}/api/access/admin`, {
+                        headers: {Authorization: token},
+                    })
+                    .then((_) => {
+                        setUserType('admin');
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching user type:', error);
+                        nav('/');
+                    });
+            });
     }, []);
 
     const PAGE_ATTRACTIONS = 10;
@@ -41,7 +55,7 @@ function AttractionsPage() {
     useEffect(() => {
         axios
             .get(
-                `${config.SERVER_URL}/api/attractions/filtered/from/${(currentPage - 1) * PAGE_ATTRACTIONS + 1}/to/${currentPage * PAGE_ATTRACTIONS}`,
+                `${config.SERVER_URL}/api/attractions/from/${(currentPage - 1) * PAGE_ATTRACTIONS + 1}/to/${currentPage * PAGE_ATTRACTIONS}`,
                 {
                     params: {
                         sortingOption: sortingOption,
@@ -64,9 +78,8 @@ function AttractionsPage() {
                     ),
                 );
             });
-
         axios
-            .get(`${config.SERVER_URL}/api/attractions/filtered/count`, {
+            .get(`${config.SERVER_URL}/api/attractions/count`, {
                 params: {
                     name: filters.name,
                     theme: filters.theme,
@@ -94,6 +107,9 @@ function AttractionsPage() {
             .delete(
                 `${config.SERVER_URL}/api/attraction/delete/${attractionId}`,
                 {
+                    params: {
+                        userType: userType,
+                    },
                     headers: {
                         Authorization: localStorage.getItem('token'),
                     },
@@ -233,6 +249,7 @@ function AttractionsPage() {
                     <Grid item xs={12} sm={9} container spacing={3}>
                         {attractions.map((attraction) => (
                             <AttractionCard
+                                userType={userType}
                                 attraction={attraction}
                                 onEdit={toEdit}
                                 onDelete={handleDeleteAttractionItem}

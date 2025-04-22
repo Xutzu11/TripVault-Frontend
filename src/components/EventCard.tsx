@@ -1,20 +1,27 @@
 // src/components/EventCard.tsx
 import {
-    Button,
+    AddShoppingCart as AddShoppingCartIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+} from '@mui/icons-material';
+import {
     Card,
     CardActions,
     CardContent,
+    IconButton,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import {Event as AttractionEvent} from '../types';
 
 interface EventCardProps {
+    userType: string;
     event: AttractionEvent;
     onEdit: (id: number) => void;
     onDelete: (id: number) => void;
 }
 
-const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
+const EventCard = ({userType, event, onEdit, onDelete}: EventCardProps) => {
     console.log('EventCard', event);
     const addToCart = () => {
         const cart = JSON.parse(localStorage.getItem('eventsCart') || '[]');
@@ -57,23 +64,39 @@ const EventCard = ({event, onEdit, onDelete}: EventCardProps) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button
-                    size='small'
-                    color='primary'
-                    onClick={() => onEdit(event.id)}
-                >
-                    Edit
-                </Button>
-                <Button
-                    size='small'
-                    color='secondary'
-                    onClick={() => onDelete(event.id)}
-                >
-                    Delete
-                </Button>
-                <Button size='small' color='success' onClick={addToCart}>
-                    Add to Cart
-                </Button>
+                {userType === 'admin' && (
+                    <>
+                        <Tooltip title='Edit'>
+                            <IconButton
+                                color='primary'
+                                onClick={() => onEdit(event.id)}
+                                size='small'
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Delete'>
+                            <IconButton
+                                color='secondary'
+                                onClick={() => onDelete(event.id)}
+                                size='small'
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </>
+                )}
+                {userType === 'user' && (
+                    <Tooltip title='Add to Cart'>
+                        <IconButton
+                            color='success'
+                            onClick={addToCart}
+                            size='small'
+                        >
+                            <AddShoppingCartIcon />
+                        </IconButton>
+                    </Tooltip>
+                )}
             </CardActions>
         </Card>
     );

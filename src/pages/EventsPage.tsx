@@ -26,10 +26,41 @@ function EventsPage() {
     const [events, setEvents] = useState([]);
     const [totalEvents, setTotalEvents] = useState(0);
 
+    const [userType, setUserType] = useState('');
+
+    // Check if user has access
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            nav('/');
+            return;
+        }
+        axios
+            .get(`${config.SERVER_URL}/api/access/user`, {
+                headers: {Authorization: token},
+            })
+            .then((_) => {
+                setUserType('user');
+            })
+            .catch((_) => {
+                axios
+                    .get(`${config.SERVER_URL}/api/access/admin`, {
+                        headers: {Authorization: token},
+                    })
+                    .then((_) => {
+                        setUserType('admin');
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching user type:', error);
+                        nav('/');
+                    });
+            });
+    }, []);
+
     const fetchEvents = async (page = 1) => {
         try {
             const response = await axios.get(
-                `${config.SERVER_URL}/api/events/filtered/from/${(page - 1) * PAGE_EVENTS + 1}/to/${page * PAGE_EVENTS}`,
+                `${config.SERVER_URL}/api/events/from/${(page - 1) * PAGE_EVENTS + 1}/to/${page * PAGE_EVENTS}`,
                 {
                     params: {
                         sortopt: sortOpt,
@@ -46,7 +77,7 @@ function EventsPage() {
             setEvents(response.data.map((event: any) => new Event(event)));
 
             const countResponse = await axios.get(
-                `${config.SERVER_URL}/api/events/filtered/count`,
+                `${config.SERVER_URL}/api/events/count`,
                 {
                     params: {
                         name: filters.name,
@@ -231,6 +262,7 @@ function EventsPage() {
                                     {events.map((event: Event) => (
                                         <Grid item xs={12} key={event.id}>
                                             <EventCard
+                                                userType={userType}
                                                 event={event}
                                                 onEdit={toEdit}
                                                 onDelete={handleDeleteEventItem}

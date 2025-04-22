@@ -6,16 +6,14 @@ import EditExhibition from './EditExhibition';
 import EditMuseum from './EditMuseum';
 import EditUser from './EditUser';
 import ExhibitionsOnMuseum from './ExhibitionsOnMuseum';
-import LoginPage from './LoginPage';
 import AttractionsPage from './pages/AttractionsPage';
 import CartPage from './pages/CartPage';
 import EventsPage from './pages/EventsPage';
+import LoginPage from './pages/LoginPage';
 import MapPage from './pages/MapPage';
+import RegisterPage from './pages/RegisterPage';
 import SuccessPage from './pages/SuccessPage';
 import ProfilePage from './ProfilePage';
-import RegisterPage from './RegisterPage';
-import RevenueChart from './RevenueChart';
-import UsersPage from './UsersPage';
 
 function App() {
     return (
@@ -41,9 +39,7 @@ function App() {
                         path='/exhibitions/:exhibitionID'
                         element={<EditExhibition />}
                     />
-                    <Route path='/revenue_chart' element={<RevenueChart />} />
                     <Route path='/events' element={<EventsPage />} />
-                    <Route path='/users' element={<UsersPage />} />
                     <Route path='/users/:userID' element={<EditUser />} />
                     <Route path='/map' element={<MapPage />} />
                     <Route path='/cart' element={<CartPage />} />

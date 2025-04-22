@@ -1,18 +1,25 @@
 import {
-    Button,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+    Event as EventIcon,
+} from '@mui/icons-material';
+import {
     Card,
     CardActions,
     CardContent,
     CardMedia,
     Grid,
+    IconButton,
     Rating,
     Stack,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import {Attraction} from '../types';
 
 interface AttractionCardProps {
     attraction: Attraction;
+    userType: string;
     onEdit: (id: number) => void;
     onDelete: (id: number) => void;
     onViewEvents: (id: number) => void;
@@ -20,6 +27,7 @@ interface AttractionCardProps {
 
 const AttractionCard = ({
     attraction,
+    userType,
     onEdit,
     onDelete,
     onViewEvents,
@@ -48,9 +56,11 @@ const AttractionCard = ({
                     <Typography gutterBottom variant='h5' component='div'>
                         {attraction.name}
                     </Typography>
-                    <Typography variant='body2' color='textSecondary'>
-                        Revenue: ${attraction.revenue}
-                    </Typography>
+                    {userType === 'admin' && (
+                        <Typography variant='body2' color='textSecondary'>
+                            Revenue: ${attraction.revenue}
+                        </Typography>
+                    )}
                     <Typography variant='body2' color='textSecondary'>
                         Theme: {attraction.theme}
                     </Typography>
@@ -67,27 +77,37 @@ const AttractionCard = ({
                     </Stack>
                 </CardContent>
                 <CardActions>
-                    <Button
-                        size='small'
-                        color='primary'
-                        onClick={() => onEdit(attraction.id)}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        size='small'
-                        color='secondary'
-                        onClick={() => onDelete(attraction.id)}
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        size='small'
-                        color='primary'
-                        onClick={() => onViewEvents(attraction.id)}
-                    >
-                        See events
-                    </Button>
+                    {userType === 'admin' && (
+                        <>
+                            <Tooltip title='Edit'>
+                                <IconButton
+                                    color='primary'
+                                    onClick={() => onEdit(attraction.id)}
+                                    size='small'
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title='Delete'>
+                                <IconButton
+                                    color='secondary'
+                                    onClick={() => onDelete(attraction.id)}
+                                    size='small'
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </>
+                    )}
+                    <Tooltip title='See Events'>
+                        <IconButton
+                            color='primary'
+                            onClick={() => onViewEvents(attraction.id)}
+                            size='small'
+                        >
+                            <EventIcon />
+                        </IconButton>
+                    </Tooltip>
                 </CardActions>
             </Card>
         </Grid>
