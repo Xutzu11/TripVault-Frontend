@@ -11,9 +11,9 @@ import CartPage from './pages/CartPage';
 import EventsPage from './pages/EventsPage';
 import LoginPage from './pages/LoginPage';
 import MapPage from './pages/MapPage';
+import ProfilePage from './pages/ProfilePage';
 import RegisterPage from './pages/RegisterPage';
 import SuccessPage from './pages/SuccessPage';
-import ProfilePage from './ProfilePage';
 
 function App() {
     return (

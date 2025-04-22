@@ -3,10 +3,7 @@ import {
     Button,
     Card,
     CardContent,
-    CircularProgress,
     Container,
-    CssBaseline,
-    ThemeProvider,
     Typography,
 } from '@mui/material';
 
@@ -14,8 +11,8 @@ import {ArrowBack} from '@mui/icons-material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import config from './config.json';
-import theme from './theme'; // Assuming you have a theme.js file with your custom dark theme
+import LoadingScreen from '../components/LoadingScreen';
+import config from '../config.json';
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({
@@ -48,23 +45,7 @@ const ProfilePage = () => {
     }, []);
 
     if (loading) {
-        return (
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                        bgcolor: 'background.default',
-                        color: 'text.primary',
-                    }}
-                >
-                    <CircularProgress />
-                </Box>
-            </ThemeProvider>
-        );
+        return <LoadingScreen />;
     }
 
     return (

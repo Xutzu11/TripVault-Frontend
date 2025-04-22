@@ -1,14 +1,9 @@
 import {CheckCircleOutline, ErrorOutline} from '@mui/icons-material';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    Typography,
-} from '@mui/material';
+import {Box, Button, Container, Typography} from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
+import LoadingScreen from '../components/LoadingScreen';
 import config from '../config.json';
 
 const SuccessPage = () => {
@@ -63,11 +58,7 @@ const SuccessPage = () => {
     }, []);
 
     if (loading) {
-        return (
-            <Box sx={{display: 'flex', justifyContent: 'center', mt: 5}}>
-                <CircularProgress />
-            </Box>
-        );
+        return <LoadingScreen />;
     }
 
     return (

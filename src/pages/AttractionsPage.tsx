@@ -6,6 +6,7 @@ import '../App.css';
 import AttractionCard from '../components/AttractionCard';
 import AttractionsFiltersPanel from '../components/AttractionsFiltersPanel';
 import Footer from '../components/Footer';
+import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
 import {Attraction} from '../types';
@@ -14,6 +15,7 @@ function AttractionsPage() {
     const [refetch, setRefetch] = useState(false);
     const nav = useNavigate();
     const [userType, setUserType] = useState('');
+    const [loading, setLoading] = useState(true);
 
     // Check if user has access
     useEffect(() => {
@@ -95,6 +97,7 @@ function AttractionsPage() {
                 setTotalAttractions(response.data);
             });
         setRefetch(false);
+        setLoading(false);
     }, [currentPage, sortingOption, refetch]);
 
     // Deleting an attraction
@@ -218,6 +221,10 @@ function AttractionsPage() {
         setCities([]);
         setCurrentPage(1);
     };
+
+    if (loading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <>

@@ -12,6 +12,7 @@ import {useNavigate} from 'react-router-dom';
 import EventCard from '../components/EventCard';
 import EventsFiltersPanel from '../components/EventsFiltersPanel';
 import Footer from '../components/Footer';
+import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
 import {Event} from '../types';
@@ -25,7 +26,7 @@ function EventsPage() {
     const PAGE_EVENTS = 10;
     const [events, setEvents] = useState([]);
     const [totalEvents, setTotalEvents] = useState(0);
-
+    const [loading, setLoading] = useState(true);
     const [userType, setUserType] = useState('');
 
     // Check if user has access
@@ -94,23 +95,8 @@ function EventsPage() {
         } catch (error) {
             console.error('Error fetching events:', error);
         }
+        setLoading(false);
     };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    nav('/');
-                    return;
-                }
-            } catch (error) {
-                nav('/');
-            }
-        };
-
-        fetchData();
-    }, []);
 
     useEffect(() => {
         fetchEvents(currentP);
@@ -219,6 +205,10 @@ function EventsPage() {
         setCurrentP(1);
         setRefetch(true);
     };
+
+    if (loading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <>
