@@ -1,8 +1,16 @@
-import {Box, CssBaseline, Grid, Pagination} from '@mui/material';
+import {
+    Box,
+    Container,
+    CssBaseline,
+    Grid,
+    Pagination,
+    Typography,
+} from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../App.css';
+import AddButton from '../components/AddButton';
 import AttractionCard from '../components/AttractionCard';
 import AttractionsFiltersPanel from '../components/AttractionsFiltersPanel';
 import Footer from '../components/Footer';
@@ -144,7 +152,7 @@ function AttractionsPage() {
 
     // Viewing events for an attraction
     const toEventsAttraction = (attractionId: number) => {
-        nav('/events-attraction/' + String(attractionId));
+        nav('/events/' + String(attractionId));
     };
 
     // Changing the page
@@ -238,47 +246,101 @@ function AttractionsPage() {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
+                    minHeight: '100vh',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={3}>
-                        <AttractionsFiltersPanel
-                            filters={filters}
-                            states={states}
-                            cities={cities}
-                            onFilterChange={handleFilterChange}
-                            onApply={applyFilters}
-                            onReset={resetFilters}
-                            sortingOption={sortingOption}
-                            onSortChange={toSort}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={9} container spacing={3}>
-                        {attractions.map((attraction) => (
-                            <AttractionCard
-                                userType={userType}
-                                attraction={attraction}
-                                onEdit={toEdit}
-                                onDelete={handleDeleteAttractionItem}
-                                onViewEvents={toEventsAttraction}
+                <Container>
+                    <Box sx={{padding: 1}}>
+                        <Typography
+                            variant='h4'
+                            align='center'
+                            gutterBottom
+                            sx={{fontWeight: 'bold'}}
+                        >
+                            Attractions
+                        </Typography>
+                        {userType === 'admin' && (
+                            <AddButton
+                                tooltip='Add Attraction'
+                                to='/attractions/add'
                             />
-                        ))}
+                        )}
+                    </Box>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={3}>
+                            <AttractionsFiltersPanel
+                                filters={filters}
+                                states={states}
+                                cities={cities}
+                                onFilterChange={handleFilterChange}
+                                onApply={applyFilters}
+                                onReset={resetFilters}
+                                sortingOption={sortingOption}
+                                onSortChange={toSort}
+                            />
+                        </Grid>
+                        {totalAttractions > 0 ? (
+                            <Grid item xs={12} sm={9} container spacing={3}>
+                                {attractions.map((attraction) => (
+                                    <AttractionCard
+                                        key={attraction.id}
+                                        userType={userType}
+                                        attraction={attraction}
+                                        onEdit={toEdit}
+                                        onDelete={handleDeleteAttractionItem}
+                                        onViewEvents={toEventsAttraction}
+                                    />
+                                ))}
+                            </Grid>
+                        ) : (
+                            <Grid item xs={12} sm={9}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: '300px',
+                                        width: '100%',
+                                        borderRadius: 2,
+                                        backgroundColor: '#2f2f2f',
+                                        boxShadow: 3,
+                                        padding: 4,
+                                    }}
+                                >
+                                    <Typography
+                                        variant='h4'
+                                        sx={{
+                                            color: '#d4b699',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        No attractions found.
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        )}
                     </Grid>
-                </Grid>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginTop: 2,
-                    }}
-                >
-                    <Pagination
-                        count={Math.ceil(totalAttractions / PAGE_ATTRACTIONS)}
-                        page={currentPage}
-                        onChange={handlePageChange}
-                        color='primary'
-                    />
-                </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: 2,
+                        }}
+                    >
+                        <Pagination
+                            count={Math.ceil(
+                                totalAttractions / PAGE_ATTRACTIONS,
+                            )}
+                            page={currentPage}
+                            onChange={handlePageChange}
+                            color='primary'
+                        />
+                    </Box>
+                </Container>
             </Box>
             <Footer />
         </>

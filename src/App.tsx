@@ -1,11 +1,7 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import AddExhibition from './AddExhibition';
-import AddMuseum from './AddMuseum';
 import './App.css';
-import EditExhibition from './EditExhibition';
-import EditMuseum from './EditMuseum';
-import EditUser from './EditUser';
-import ExhibitionsOnMuseum from './ExhibitionsOnMuseum';
+import AddAttractionPage from './pages/AddAttractionPage';
+import AddEventPage from './pages/AddEventPage';
 import AttractionsPage from './pages/AttractionsPage';
 import CartPage from './pages/CartPage';
 import EventsPage from './pages/EventsPage';
@@ -25,22 +21,15 @@ function App() {
                     <Route path='/register' element={<RegisterPage />} />
                     <Route path='/profile' element={<ProfilePage />} />
                     <Route path='/attractions' element={<AttractionsPage />} />
-                    <Route path='/museums/add' element={<AddMuseum />} />
                     <Route
-                        path='/exhibitions/add'
-                        element={<AddExhibition />}
-                    />
-                    <Route path='/museums/:museumID' element={<EditMuseum />} />
-                    <Route
-                        path='/exhibitions-museum/:museumID'
-                        element={<ExhibitionsOnMuseum />}
+                        path='/attractions/add'
+                        element={<AddAttractionPage />}
                     />
                     <Route
-                        path='/exhibitions/:exhibitionID'
-                        element={<EditExhibition />}
+                        path='/events/:attractionID?'
+                        element={<EventsPage />}
                     />
-                    <Route path='/events' element={<EventsPage />} />
-                    <Route path='/users/:userID' element={<EditUser />} />
+                    <Route path='/events/add' element={<AddEventPage />} />
                     <Route path='/map' element={<MapPage />} />
                     <Route path='/cart' element={<CartPage />} />
                     <Route path='/success' element={<SuccessPage />} />

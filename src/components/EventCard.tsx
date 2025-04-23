@@ -62,6 +62,11 @@ const EventCard = ({userType, event, onEdit, onDelete}: EventCardProps) => {
                 <Typography variant='body2' color='textSecondary'>
                     Price: ${event.price.toFixed(2)}
                 </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                    Date: {new Date(event.startDate).toLocaleDateString()}{' '}
+                    {' - '}
+                    {new Date(event.endDate).toLocaleDateString()}
+                </Typography>
             </CardContent>
             <CardActions>
                 {userType === 'admin' && (

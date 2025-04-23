@@ -15,6 +15,7 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
+import config from '../config.json';
 import {Attraction} from '../types';
 
 interface AttractionCardProps {
@@ -46,11 +47,8 @@ const AttractionCard = ({
                 <CardMedia
                     component='img'
                     alt={attraction.name}
-                    height='140'
-                    image={
-                        attraction.photoPath ||
-                        '/static/images/cards/default.jpg'
-                    }
+                    height='220'
+                    image={`${config.GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
                 />
                 <CardContent>
                     <Typography gutterBottom variant='h5' component='div'>

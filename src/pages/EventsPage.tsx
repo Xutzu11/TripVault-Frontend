@@ -8,18 +8,20 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
+import AddButton from '../components/AddButton';
 import EventCard from '../components/EventCard';
 import EventsFiltersPanel from '../components/EventsFiltersPanel';
 import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
-import {Event} from '../types';
+import {Attraction, Event} from '../types';
 
 function EventsPage() {
     const [refetch, setRefetch] = useState(false);
     const nav = useNavigate();
+    const {attractionID} = useParams();
 
     const [sortOpt, setSortOpt] = useState('');
     const [currentP, setCurrentP] = useState(1);
@@ -28,6 +30,7 @@ function EventsPage() {
     const [totalEvents, setTotalEvents] = useState(0);
     const [loading, setLoading] = useState(true);
     const [userType, setUserType] = useState('');
+    const [attraction, setAttraction] = useState<Attraction | null>(null);
 
     // Check if user has access
     useEffect(() => {
@@ -60,10 +63,23 @@ function EventsPage() {
 
     const fetchEvents = async (page = 1) => {
         try {
-            const response = await axios.get(
+            if (attractionID !== undefined) {
+                const attractionResponse = await axios.get(
+                    `${config.SERVER_URL}/api/attraction/${attractionID}`,
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('token'),
+                        },
+                    },
+                );
+                setAttraction(new Attraction(attractionResponse.data));
+            }
+
+            const eventsResponse = await axios.get(
                 `${config.SERVER_URL}/api/events/from/${(page - 1) * PAGE_EVENTS + 1}/to/${page * PAGE_EVENTS}`,
                 {
                     params: {
+                        attractionID: attractionID,
                         sortopt: sortOpt,
                         name: filters.name,
                         price: filters.price,
@@ -75,12 +91,15 @@ function EventsPage() {
                     },
                 },
             );
-            setEvents(response.data.map((event: any) => new Event(event)));
+            setEvents(
+                eventsResponse.data.map((event: any) => new Event(event)),
+            );
 
             const countResponse = await axios.get(
                 `${config.SERVER_URL}/api/events/count`,
                 {
                     params: {
+                        attractionID: attractionID,
                         name: filters.name,
                         price: filters.price,
                         state: filters.state,
@@ -210,12 +229,15 @@ function EventsPage() {
         return <LoadingScreen />;
     }
 
+    console.log('Total events:', totalEvents);
+
     return (
         <>
             <CssBaseline />
             <TopNavBar />
             <Box
                 sx={{
+                    padding: 3,
                     background:
                         'linear-gradient(to right bottom, #1f1f1f, #282828, #2f2f2f, #343434, #404040)',
                     backgroundSize: 'cover',
@@ -228,11 +250,20 @@ function EventsPage() {
                 }}
             >
                 <Container>
-                    <Box sx={{padding: 3}}>
-                        <Typography variant='h4' align='center' gutterBottom>
-                            Events
+                    <Box sx={{padding: 1}}>
+                        <Typography
+                            variant='h4'
+                            align='center'
+                            gutterBottom
+                            sx={{fontWeight: 'bold'}}
+                        >
+                            Events{' '}
+                            {attractionID !== undefined &&
+                                'for ' + attraction?.name}
                         </Typography>
-
+                        {userType === 'admin' && (
+                            <AddButton tooltip='Add Event' to='/events/add' />
+                        )}
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={3}>
                                 <EventsFiltersPanel
@@ -248,35 +279,70 @@ function EventsPage() {
                             </Grid>
 
                             <Grid item xs={12} sm={9}>
-                                <Grid container spacing={3}>
-                                    {events.map((event: Event) => (
-                                        <Grid item xs={12} key={event.id}>
-                                            <EventCard
-                                                userType={userType}
-                                                event={event}
-                                                onEdit={toEdit}
-                                                onDelete={handleDeleteEventItem}
-                                            />
+                                {totalEvents > 0 ? (
+                                    <>
+                                        <Grid container spacing={3}>
+                                            {events.map((event: Event) => (
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    key={event.id}
+                                                >
+                                                    <EventCard
+                                                        userType={userType}
+                                                        event={event}
+                                                        onEdit={toEdit}
+                                                        onDelete={
+                                                            handleDeleteEventItem
+                                                        }
+                                                    />
+                                                </Grid>
+                                            ))}
                                         </Grid>
-                                    ))}
-                                </Grid>
 
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        marginTop: 2,
-                                    }}
-                                >
-                                    <Pagination
-                                        count={Math.ceil(
-                                            totalEvents / PAGE_EVENTS,
-                                        )}
-                                        page={currentP}
-                                        onChange={handlePageChange}
-                                        color='primary'
-                                    />
-                                </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                marginTop: 2,
+                                            }}
+                                        >
+                                            <Pagination
+                                                count={Math.ceil(
+                                                    totalEvents / PAGE_EVENTS,
+                                                )}
+                                                page={currentP}
+                                                onChange={handlePageChange}
+                                                color='primary'
+                                            />
+                                        </Box>
+                                    </>
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                            minHeight: '300px',
+                                            borderRadius: 2,
+                                            backgroundColor: '#2f2f2f',
+                                            boxShadow: 3,
+                                            padding: 4,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant='h4'
+                                            sx={{
+                                                color: '#d4b699',
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            No events found.
+                                        </Typography>
+                                    </Box>
+                                )}
                             </Grid>
                         </Grid>
                     </Box>
