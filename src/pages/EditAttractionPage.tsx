@@ -1,14 +1,15 @@
 import {Box, CssBaseline} from '@mui/material';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import AttractionForm from '../components/AttractionForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
 
-const AddAttractionPage = () => {
+const EditAttractionPage = () => {
     const nav = useNavigate();
+    const {attractionID} = useParams();
 
     const [position, setPosition] = useState<{lat: number; lng: number}>({
         lat: 45.9432,
@@ -47,12 +48,33 @@ const AddAttractionPage = () => {
             });
     }, []);
 
+    useEffect(() => {
+        if (!attractionID) return;
+        axios
+            .get(`${config.SERVER_URL}/api/attraction/${attractionID}`, {
+                headers: {Authorization: localStorage.getItem('token')},
+            })
+            .then((res) => {
+                console.log(res.data);
+                setFormData({
+                    name: res.data.name,
+                    theme: res.data.theme,
+                    revenue: parseInt(res.data.revenue),
+                    rating: parseFloat(res.data.rating),
+                    state: parseInt(res.data.state),
+                    city_id: parseInt(res.data.city_id),
+                    photo: null,
+                });
+                setPosition({
+                    lat: parseFloat(res.data.latitude),
+                    lng: parseFloat(res.data.longitude),
+                });
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
     const handleSubmit = async () => {
-        if (
-            !formData.name ||
-            formData.city_id === 0 ||
-            (position.lat === 45.9432 && position.lng === 24.9668)
-        ) {
+        if (!formData.name || formData.city_id === 0) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -67,17 +89,21 @@ const AddAttractionPage = () => {
             data.append('longitude', position.lng.toString());
             data.append('photo', formData.photo as Blob);
 
-            await axios.post(`${config.SERVER_URL}/api/attraction/add`, data, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
-                    'Content-Type': 'multipart/form-data',
+            await axios.put(
+                `${config.SERVER_URL}/api/attraction/edit/${attractionID}`,
+                data,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            });
+            );
 
-            alert('Attraction added!');
+            alert('Attraction updated!');
             nav('/attractions');
         } catch (err) {
-            alert('Failed to add attraction.');
+            alert('Failed to edit attraction.');
             console.error(err);
         }
     };
@@ -103,7 +129,7 @@ const AddAttractionPage = () => {
                     position={position}
                     setPosition={setPosition}
                     handleSubmit={handleSubmit}
-                    typeLabel='Add'
+                    typeLabel='Edit'
                 />
             </Box>
             <Footer />
@@ -111,4 +137,4 @@ const AddAttractionPage = () => {
     );
 };
 
-export default AddAttractionPage;
+export default EditAttractionPage;

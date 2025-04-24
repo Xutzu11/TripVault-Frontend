@@ -47,8 +47,8 @@ const TopNavBar = () => {
                             display: {xs: 'none', md: 'flex'},
                             height: 50,
                         }}
-                        alt='Logo'
-                        src='https://i.ibb.co/1f1WgXs/logo.png'
+                        alt='Museum Logo'
+                        src='https://storage.googleapis.com/tripvault/logo.png'
                     />
                     <Box
                         sx={{

@@ -15,24 +15,23 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 import config from '../config.json';
 import {Attraction} from '../types';
 
 interface AttractionCardProps {
     attraction: Attraction;
     userType: string;
-    onEdit: (id: number) => void;
-    onDelete: (id: number) => void;
-    onViewEvents: (id: number) => void;
+    handleDelete: (id: number) => void;
 }
 
 const AttractionCard = ({
     attraction,
     userType,
-    onEdit,
-    onDelete,
-    onViewEvents,
+    handleDelete,
 }: AttractionCardProps) => {
+    const nav = useNavigate();
+
     return (
         <Grid item xs={12} key={attraction.id}>
             <Card
@@ -80,7 +79,12 @@ const AttractionCard = ({
                             <Tooltip title='Edit'>
                                 <IconButton
                                     color='primary'
-                                    onClick={() => onEdit(attraction.id)}
+                                    onClick={() =>
+                                        nav(
+                                            `/attractions/edit/` +
+                                                String(attraction.id),
+                                        )
+                                    }
                                     size='small'
                                 >
                                     <EditIcon />
@@ -89,7 +93,7 @@ const AttractionCard = ({
                             <Tooltip title='Delete'>
                                 <IconButton
                                     color='secondary'
-                                    onClick={() => onDelete(attraction.id)}
+                                    onClick={() => handleDelete(attraction.id)}
                                     size='small'
                                 >
                                     <DeleteIcon />
@@ -100,7 +104,9 @@ const AttractionCard = ({
                     <Tooltip title='See Events'>
                         <IconButton
                             color='primary'
-                            onClick={() => onViewEvents(attraction.id)}
+                            onClick={() =>
+                                nav('/events/' + String(attraction.id))
+                            }
                             size='small'
                         >
                             <EventIcon />

@@ -2,14 +2,15 @@ import {Box, CssBaseline} from '@mui/material';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import EventForm from '../components/EventForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
 
-const AddEventPage = () => {
+const EditEventPage = () => {
     const nav = useNavigate();
+    const {eventId} = useParams();
     const [attractions, setAttractions] = useState<any[]>([]);
     const [formData, setFormData] = useState<{
         name: string;
@@ -51,6 +52,24 @@ const AddEventPage = () => {
             .then((res) => setAttractions(res.data));
     }, []);
 
+    useEffect(() => {
+        axios
+            .get(`${config.SERVER_URL}/api/event/${eventId}`, {
+                headers: {Authorization: localStorage.getItem('token')},
+            })
+            .then((res) => {
+                setFormData({
+                    name: res.data.name,
+                    description: res.data.description,
+                    price: res.data.price,
+                    startDate: dayjs(res.data.start_date),
+                    endDate: dayjs(res.data.end_date),
+                    attractionId: res.data.attraction_id,
+                });
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
     const toMySQLDate = (date: Date) => date.toISOString().split('T')[0];
 
     const handleSubmit = async () => {
@@ -66,17 +85,21 @@ const AddEventPage = () => {
             data.append('startDate', toMySQLDate(formData.startDate.toDate()));
             data.append('endDate', toMySQLDate(formData.endDate.toDate()));
             data.append('attractionId', formData.attractionId.toString());
-            await axios.post(`${config.SERVER_URL}/api/event/add`, data, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
-                    'Content-Type': 'multipart/form-data',
+            await axios.put(
+                `${config.SERVER_URL}/api/event/edit/${eventId}`,
+                data,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            });
+            );
 
-            alert('Event added!');
+            alert('Event updated!');
             nav('/events');
         } catch (err) {
-            alert('Failed to add event.');
+            alert('Failed to update event.');
             console.error(err);
         }
     };
@@ -101,7 +124,7 @@ const AddEventPage = () => {
                     setFormData={setFormData}
                     handleSubmit={handleSubmit}
                     attractions={attractions}
-                    typeLabel='Add'
+                    typeLabel='Edit'
                 />
             </Box>
             <Footer />
@@ -109,4 +132,4 @@ const AddEventPage = () => {
     );
 };
 
-export default AddEventPage;
+export default EditEventPage;

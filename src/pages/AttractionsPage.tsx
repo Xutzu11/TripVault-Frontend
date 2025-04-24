@@ -109,7 +109,7 @@ function AttractionsPage() {
     }, [currentPage, sortingOption, refetch]);
 
     // Deleting an attraction
-    const handleDeleteAttractionItem = (attractionId: number) => {
+    const handleDelete = (attractionId: number) => {
         const confirmDelete = window.confirm(
             'Are you sure you want to delete this attraction?',
         );
@@ -140,19 +140,9 @@ function AttractionsPage() {
             });
     };
 
-    // Editing an attraction
-    const toEdit = (attractionId: number) => {
-        nav(`/attractions/` + String(attractionId));
-    };
-
     // Sorting attractions
     const toSort = (event: any) => {
         setSortingOption(event.target.value);
-    };
-
-    // Viewing events for an attraction
-    const toEventsAttraction = (attractionId: number) => {
-        nav('/events/' + String(attractionId));
     };
 
     // Changing the page
@@ -289,9 +279,7 @@ function AttractionsPage() {
                                         key={attraction.id}
                                         userType={userType}
                                         attraction={attraction}
-                                        onEdit={toEdit}
-                                        onDelete={handleDeleteAttractionItem}
-                                        onViewEvents={toEventsAttraction}
+                                        handleDelete={handleDelete}
                                     />
                                 ))}
                             </Grid>

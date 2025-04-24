@@ -14,8 +14,8 @@ const Footer = () => {
             <Container maxWidth='lg' sx={{textAlign: 'center'}}>
                 <Box
                     component='img'
-                    src='https://i.ibb.co/1f1WgXs/logo.png' // Replace with your museum icon
-                    alt='Museum Icon'
+                    src='https://storage.googleapis.com/tripvault/logo.png'
+                    alt='Museum Logo'
                     sx={{height: 100, mb: 2}}
                 />
                 <Typography variant='body2'>

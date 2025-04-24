@@ -4,6 +4,8 @@ import AddAttractionPage from './pages/AddAttractionPage';
 import AddEventPage from './pages/AddEventPage';
 import AttractionsPage from './pages/AttractionsPage';
 import CartPage from './pages/CartPage';
+import EditAttractionPage from './pages/EditAttractionPage';
+import EditEventPage from './pages/EditEventPage';
 import EventsPage from './pages/EventsPage';
 import LoginPage from './pages/LoginPage';
 import MapPage from './pages/MapPage';
@@ -26,8 +28,16 @@ function App() {
                         element={<AddAttractionPage />}
                     />
                     <Route
+                        path='/attractions/edit/:attractionID'
+                        element={<EditAttractionPage />}
+                    />
+                    <Route
                         path='/events/:attractionID?'
                         element={<EventsPage />}
+                    />
+                    <Route
+                        path='/events/edit/:eventId'
+                        element={<EditEventPage />}
                     />
                     <Route path='/events/add' element={<AddEventPage />} />
                     <Route path='/map' element={<MapPage />} />

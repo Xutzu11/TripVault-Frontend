@@ -185,7 +185,7 @@ function EventsPage() {
     }, [filters.state]);
 
     const toEdit = (eventID: Number) => {
-        nav(`/events/` + String(eventID));
+        nav(`/events/edit/` + String(eventID));
     };
 
     const toSort = (event: any) => {
