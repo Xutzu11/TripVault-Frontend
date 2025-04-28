@@ -7,24 +7,18 @@ import EventForm from '../components/EventForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
+import {Attraction, EventFormData} from '../types';
 
 const AddEventPage = () => {
     const nav = useNavigate();
     const [attractions, setAttractions] = useState<any[]>([]);
-    const [formData, setFormData] = useState<{
-        name: string;
-        description: string;
-        price: number;
-        startDate: dayjs.Dayjs;
-        endDate: dayjs.Dayjs;
-        attractionId: number;
-    }>({
+    const [formData, setFormData] = useState<EventFormData>({
         name: '',
         description: '',
         price: 0,
         startDate: dayjs(),
         endDate: dayjs(),
-        attractionId: 0,
+        attractionId: '',
     });
 
     useEffect(() => {
@@ -48,13 +42,19 @@ const AddEventPage = () => {
                     Authorization: localStorage.getItem('token'),
                 },
             })
-            .then((res) => setAttractions(res.data));
+            .then((res) =>
+                setAttractions(
+                    res.data.map(
+                        (attraction: any) => new Attraction(attraction),
+                    ),
+                ),
+            );
     }, []);
 
     const toMySQLDate = (date: Date) => date.toISOString().split('T')[0];
 
     const handleSubmit = async () => {
-        if (!formData.name || !formData.price || formData.attractionId === 0) {
+        if (!formData.name || !formData.price || formData.attractionId === '') {
             alert('Please fill all required fields.');
             return;
         }

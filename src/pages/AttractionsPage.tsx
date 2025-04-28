@@ -17,7 +17,7 @@ import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
-import {Attraction} from '../types';
+import {Attraction, City, State} from '../types';
 
 function AttractionsPage() {
     const [refetch, setRefetch] = useState(false);
@@ -56,10 +56,10 @@ function AttractionsPage() {
 
     const PAGE_ATTRACTIONS = 10;
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [attractions, setAttractions] = useState<Attraction[]>([]);
-    const [sortingOption, setSortingOption] = useState('');
-    const [totalAttractions, setTotalAttractions] = useState(0);
+    const [sortingOption, setSortingOption] = useState<string>('');
+    const [totalAttractions, setTotalAttractions] = useState<number>(0);
 
     // Get the first 10 attractions with filters
     useEffect(() => {
@@ -109,7 +109,7 @@ function AttractionsPage() {
     }, [currentPage, sortingOption, refetch]);
 
     // Deleting an attraction
-    const handleDelete = (attractionId: number) => {
+    const handleDelete = (attractionId: string) => {
         const confirmDelete = window.confirm(
             'Are you sure you want to delete this attraction?',
         );
@@ -159,7 +159,7 @@ function AttractionsPage() {
         rating: 0,
     });
 
-    const [states, setStates] = useState([]);
+    const [states, setStates] = useState<State[]>([]);
 
     // Getting the states
     useEffect(() => {
@@ -169,11 +169,13 @@ function AttractionsPage() {
                     Authorization: localStorage.getItem('token'),
                 },
             })
-            .then((response) => setStates(response.data))
+            .then((response) =>
+                setStates(response.data.map((state: any) => new State(state))),
+            )
             .catch((error) => console.error('Error fetching states:', error));
     }, []);
 
-    const [cities, setCities] = useState([]);
+    const [cities, setCities] = useState<City[]>([]);
 
     // Getting the cities based on the selected state
     useEffect(() => {
@@ -185,7 +187,9 @@ function AttractionsPage() {
                         Authorization: localStorage.getItem('token'),
                     },
                 })
-                .then((response) => setCities(response.data))
+                .then((response) =>
+                    setCities(response.data.map((city: any) => new City(city))),
+                )
                 .catch((error) =>
                     console.error('Error fetching cities:', error),
                 );

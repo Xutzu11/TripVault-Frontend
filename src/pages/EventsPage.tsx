@@ -16,7 +16,7 @@ import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
-import {Attraction, Event} from '../types';
+import {Attraction, City, Event, State} from '../types';
 
 function EventsPage() {
     const [refetch, setRefetch] = useState(false);
@@ -122,7 +122,7 @@ function EventsPage() {
         setRefetch(false);
     }, [currentP, refetch, sortOpt]);
 
-    const handleDeleteEventItem = (eventID: Number) => {
+    const handleDeleteEventItem = (eventID: string) => {
         const confirmDelete = window.confirm(
             'Are you sure you want to delete this event?',
         );
@@ -152,8 +152,8 @@ function EventsPage() {
         city: 0,
     });
 
-    const [states, setStates] = useState([]);
-    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState<State[]>([]);
+    const [cities, setCities] = useState<City[]>([]);
 
     useEffect(() => {
         axios
@@ -162,7 +162,9 @@ function EventsPage() {
                     Authorization: localStorage.getItem('token'),
                 },
             })
-            .then((response) => setStates(response.data))
+            .then((response) =>
+                setStates(response.data.map((state: any) => new State(state))),
+            )
             .catch((error) => console.error('Error fetching states:', error));
     }, []);
 
@@ -175,7 +177,9 @@ function EventsPage() {
                         Authorization: localStorage.getItem('token'),
                     },
                 })
-                .then((response) => setCities(response.data))
+                .then((response) =>
+                    setCities(response.data.map((city: any) => new City(city))),
+                )
                 .catch((error) =>
                     console.error('Error fetching cities:', error),
                 );
@@ -184,8 +188,8 @@ function EventsPage() {
         }
     }, [filters.state]);
 
-    const toEdit = (eventID: Number) => {
-        nav(`/events/edit/` + String(eventID));
+    const toEdit = (eventID: string) => {
+        nav(`/events/edit/` + eventID);
     };
 
     const toSort = (event: any) => {

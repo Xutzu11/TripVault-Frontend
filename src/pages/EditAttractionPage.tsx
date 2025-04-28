@@ -6,25 +6,18 @@ import AttractionForm from '../components/AttractionForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
+import {AttractionFormData, MapPosition} from '../types';
 
 const EditAttractionPage = () => {
     const nav = useNavigate();
     const {attractionID} = useParams();
 
-    const [position, setPosition] = useState<{lat: number; lng: number}>({
+    const [position, setPosition] = useState<MapPosition>({
         lat: 45.9432,
         lng: 24.9668,
     });
 
-    const [formData, setFormData] = useState<{
-        name: string;
-        theme: string;
-        revenue: number;
-        rating: number;
-        state: number;
-        city_id: number;
-        photo: null | File;
-    }>({
+    const [formData, setFormData] = useState<AttractionFormData>({
         name: '',
         theme: '',
         revenue: 0,

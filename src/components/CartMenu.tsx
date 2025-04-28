@@ -40,7 +40,7 @@ const CartMenu = ({anchorEl, open, onClose}: CartMenuProps) => {
     }, [refetchCart]);
 
     // Function to delete a cart item
-    const onDeleteCartItem = (eventId: number) => {
+    const onDeleteCartItem = (eventId: string) => {
         const cart = getCartItems();
         const index = cart.findIndex((item) => item.event.id === eventId);
         if (index !== -1) {

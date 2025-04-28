@@ -17,8 +17,8 @@ import {Event as AttractionEvent} from '../types';
 interface EventCardProps {
     userType: string;
     event: AttractionEvent;
-    onEdit: (id: number) => void;
-    onDelete: (id: number) => void;
+    onEdit: (id: string) => void;
+    onDelete: (id: string) => void;
 }
 
 const EventCard = ({userType, event, onEdit, onDelete}: EventCardProps) => {

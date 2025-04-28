@@ -1,6 +1,7 @@
 import {Box} from '@mui/material';
 import {AdvancedMarker, APIProvider, Map, Pin} from '@vis.gl/react-google-maps';
 import config from '../config.json';
+import {MapPosition} from '../types';
 
 const containerStyle = {
     width: '100%',
@@ -16,8 +17,8 @@ const MapSelector = ({
     position,
     setPosition,
 }: {
-    position: {lat: number; lng: number} | null;
-    setPosition: (pos: {lat: number; lng: number}) => void;
+    position: MapPosition | null;
+    setPosition: (pos: MapPosition) => void;
 }) => {
     return (
         <Box sx={{mt: 2}}>

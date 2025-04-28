@@ -17,7 +17,7 @@ import RouteInfoCard from '../components/RouteInfoCard';
 import UserMarker from '../components/UserMarker';
 import UserPromptInput from '../components/UserPrompInput';
 import config from '../config.json';
-import {Attraction} from '../types';
+import {Attraction, MapPosition} from '../types';
 
 const MapPage = () => {
     // Check user has access
@@ -48,21 +48,15 @@ const MapPage = () => {
         libraries: ['places'],
     });
 
-    const [centerPosition, setCenterPosition] = useState<{
-        lat: number;
-        lng: number;
-    }>({lat: 46.770439, lng: 23.591423});
-    const [open, setOpen] = useState('');
-    const [photo, setPhoto] = useState('');
+    const [centerPosition, setCenterPosition] = useState<MapPosition>({
+        lat: 46.770439,
+        lng: 23.591423,
+    });
+    const [attraction, setAttraction] = useState<Attraction | null>(null);
     const [attractions, setAttractions] = useState<Attraction[]>([]);
-    const [userPosition, setUserPosition] = useState<{
-        lat: number;
-        lng: number;
-    } | null>(null);
-    const [selectedPosition, setSelectedPosition] = useState<{
-        lat: number;
-        lng: number;
-    } | null>(null);
+    const [userPosition, setUserPosition] = useState<MapPosition | null>(null);
+    const [selectedPosition, setSelectedPosition] =
+        useState<MapPosition | null>(null);
     const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
     const [routeIndex, _] = useState(0);
     const [legIndex, setLegIndex] = useState(0);
@@ -190,8 +184,7 @@ const MapPage = () => {
                 >
                     <Markers
                         attractions={attractions}
-                        setOpen={setOpen}
-                        setPhoto={setPhoto}
+                        setAttraction={setAttraction}
                         setCenterPosition={setCenterPosition}
                     />
                     <Directions
@@ -212,12 +205,10 @@ const MapPage = () => {
                     />
                     {userPosition && <UserMarker userPosition={userPosition} />}
                     <AttractionInfoWindow
-                        open={open}
-                        photo={photo}
+                        attraction={attraction}
                         centerPosition={centerPosition}
                         onClose={() => {
-                            setOpen('');
-                            setPhoto('');
+                            setAttraction(null);
                         }}
                     />
                 </Map>

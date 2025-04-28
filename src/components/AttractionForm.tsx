@@ -14,29 +14,14 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import config from '../config.json';
+import {AttractionFormData, City, MapPosition, State} from '../types';
 import MapSelector from './MapSelector';
 
 interface Props {
-    formData: {
-        name: string;
-        theme: string;
-        revenue: number;
-        rating: number;
-        state: number;
-        city_id: number;
-        photo: null | File;
-    };
-    setFormData: (data: {
-        name: string;
-        theme: string;
-        revenue: number;
-        rating: number;
-        state: number;
-        city_id: number;
-        photo: null | File;
-    }) => void;
-    position: {lat: number; lng: number};
-    setPosition: (position: {lat: number; lng: number}) => void;
+    formData: AttractionFormData;
+    setFormData: (data: AttractionFormData) => void;
+    position: MapPosition;
+    setPosition: (position: MapPosition) => void;
     handleSubmit: () => void;
     typeLabel: string;
 }
@@ -51,8 +36,8 @@ const AttractionForm = ({
 }: Props) => {
     const nav = useNavigate();
 
-    const [states, setStates] = useState([]);
-    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState<State[]>([]);
+    const [cities, setCities] = useState<City[]>([]);
 
     const handleChange = (e: any) => {
         const {name, value} = e.target;
@@ -68,7 +53,9 @@ const AttractionForm = ({
             .get(`${config.SERVER_URL}/api/states`, {
                 headers: {Authorization: localStorage.getItem('token')},
             })
-            .then((res) => setStates(res.data));
+            .then((res) =>
+                setStates(res.data.map((state: any) => new State(state))),
+            );
     }, []);
 
     useEffect(() => {
@@ -78,7 +65,9 @@ const AttractionForm = ({
                     params: {state: formData.state},
                     headers: {Authorization: localStorage.getItem('token')},
                 })
-                .then((res) => setCities(res.data));
+                .then((res) =>
+                    setCities(res.data.map((city: any) => new City(city))),
+                );
         } else {
             setCities([]);
         }

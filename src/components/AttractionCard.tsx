@@ -22,7 +22,7 @@ import {Attraction} from '../types';
 interface AttractionCardProps {
     attraction: Attraction;
     userType: string;
-    handleDelete: (id: number) => void;
+    handleDelete: (id: string) => void;
 }
 
 const AttractionCard = ({
@@ -104,9 +104,7 @@ const AttractionCard = ({
                     <Tooltip title='See Events'>
                         <IconButton
                             color='primary'
-                            onClick={() =>
-                                nav('/events/' + String(attraction.id))
-                            }
+                            onClick={() => nav('/events/' + attraction.id)}
                             size='small'
                         >
                             <EventIcon />

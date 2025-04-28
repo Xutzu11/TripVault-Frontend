@@ -25,7 +25,6 @@ const SuccessPage = () => {
             .then((res) => {
                 if (res.data.paid) {
                     setValid(true);
-                    // call api/purchase with axios
                     try {
                         const token = localStorage.getItem('token');
                         if (!token) {

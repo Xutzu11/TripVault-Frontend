@@ -85,7 +85,8 @@ const RegisterPage = () => {
         <Box
             sx={{
                 minHeight: '100vh',
-                backgroundImage: 'url(https://i.ibb.co/DMNFDyL/bkg.png)',
+                backgroundImage:
+                    'url(https://storage.googleapis.com/tripvault/background.png)',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',

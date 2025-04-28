@@ -12,6 +12,7 @@ import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import {useNavigate} from 'react-router-dom';
+import {Attraction} from '../types';
 
 interface Props {
     formData: {
@@ -20,7 +21,7 @@ interface Props {
         price: number;
         startDate: dayjs.Dayjs;
         endDate: dayjs.Dayjs;
-        attractionId: number;
+        attractionId: string;
     };
     setFormData: (data: {
         name: string;
@@ -28,9 +29,9 @@ interface Props {
         price: number;
         startDate: dayjs.Dayjs;
         endDate: dayjs.Dayjs;
-        attractionId: number;
+        attractionId: string;
     }) => void;
-    attractions: any[];
+    attractions: Attraction[];
     handleSubmit: () => void;
     typeLabel: string;
 }

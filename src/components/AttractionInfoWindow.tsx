@@ -1,41 +1,67 @@
+import {Box, CardMedia, Rating, Typography} from '@mui/material';
 import {InfoWindow} from '@vis.gl/react-google-maps';
+import config from '../config.json';
+import {Attraction, MapPosition} from '../types';
 
 interface AttractionInfoWindowProps {
-    open: string;
-    photo: string;
-    centerPosition: {lat: number; lng: number};
+    attraction: Attraction | null;
+    centerPosition: MapPosition;
     onClose: () => void;
 }
 
 const AttractionInfoWindow = ({
-    open,
-    photo,
+    attraction,
     centerPosition,
     onClose,
 }: AttractionInfoWindowProps) => {
-    if (open === '') return null;
+    if (attraction === null) return null;
 
     return (
         <InfoWindow position={centerPosition} onCloseClick={onClose}>
-            <div>
-                <p
-                    style={{
-                        color: '#171717',
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    backgroundColor: '#ffffff',
+                    padding: 2,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    minWidth: '250px',
+                    maxWidth: '300px',
+                }}
+            >
+                <Typography
+                    variant='h6'
+                    align='center'
+                    sx={{
+                        color: '#393939',
                         fontWeight: 'bold',
-                        fontSize: '1.2em',
-                        margin: '0.5em 0',
+                        mb: 1,
+                        mt: 0, // remove top margin to avoid too much free space
                     }}
                 >
-                    {open}
-                </p>
-                {photo !== '' && (
-                    <img
-                        src={photo}
-                        alt='info'
-                        style={{width: '300px', height: 'auto'}}
-                    />
-                )}
-            </div>
+                    {attraction.name}
+                </Typography>
+                <Rating
+                    value={attraction.rating}
+                    precision={0.1}
+                    size='small'
+                    readOnly
+                    sx={{marginBottom: 1}}
+                />
+                <CardMedia
+                    component='img'
+                    image={`${config.GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
+                    alt='Attraction'
+                    sx={{
+                        width: '100%',
+                        height: 'auto',
+                        borderRadius: 2,
+                        objectFit: 'cover',
+                    }}
+                />
+            </Box>
         </InfoWindow>
     );
 };

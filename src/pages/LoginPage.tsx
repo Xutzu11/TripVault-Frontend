@@ -41,20 +41,18 @@ const LoginPage = () => {
     }, [username, password]);
 
     const handleLogin = async () => {
-        console.log('login tried');
         try {
             const response = await axios.get(
                 `${config.SERVER_URL}/api/login/${username}/${password}`,
             );
             if (response.status === 200) {
-                console.log('login success: token:', response.data);
                 localStorage.setItem('token', response.data);
                 setUsername('');
                 setPassword('');
                 nav(`/attractions`);
             }
         } catch (error: any) {
-            console.log('login error:', error.response.data);
+            console.log('Login error:', error.response.data);
             setErrorMessage(error.response.data);
         }
     };
@@ -63,7 +61,8 @@ const LoginPage = () => {
         <Box
             sx={{
                 minHeight: '100vh',
-                backgroundImage: 'url(https://i.ibb.co/DMNFDyL/bkg.png)',
+                backgroundImage:
+                    'url(https://storage.googleapis.com/tripvault/background.png)',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',

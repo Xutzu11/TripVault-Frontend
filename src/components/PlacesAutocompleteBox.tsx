@@ -4,11 +4,10 @@ import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
 } from 'use-places-autocomplete';
+import {MapPosition} from '../types';
 
 interface PlacesAutocompleteBoxProps {
-    setSelectedPosition: (
-        selectedPosition: {lat: number; lng: number} | null,
-    ) => void;
+    setSelectedPosition: (selectedPosition: MapPosition | null) => void;
 }
 
 const PlacesAutocompleteBox = ({

@@ -34,16 +34,14 @@ const createCustomRenderer = () => {
 
 const Markers = ({
     attractions,
-    setOpen,
-    setPhoto,
+    setAttraction,
     setCenterPosition,
 }: {
     attractions: Attraction[];
-    setOpen: (open: string) => void;
-    setPhoto: (photo: string) => void;
+    setAttraction: (attraction: Attraction | null) => void;
     setCenterPosition: (centerPosition: {lat: number; lng: number}) => void;
 }) => {
-    const [markers, setMarkers] = useState<{[id: number]: Marker}>({});
+    const [markers, setMarkers] = useState<{[id: string]: Marker}>({});
     const map = useMap();
     const clusterer = useRef<MarkerClusterer | null>(null);
 
@@ -61,7 +59,7 @@ const Markers = ({
         }
     }, [markers]);
 
-    const setMarkerRef = (marker: Marker | null, id: number) => {
+    const setMarkerRef = (marker: Marker | null, id: string) => {
         if ((marker && markers[id]) || (!marker && !markers[id])) return;
         setMarkers((prev) => {
             if (marker) {
@@ -84,8 +82,7 @@ const Markers = ({
                         lng: attraction.longitude,
                     }}
                     onClick={() => {
-                        setOpen(attraction.name);
-                        setPhoto(attraction.photoPath);
+                        setAttraction(attraction);
                         setCenterPosition({
                             lat: attraction.latitude,
                             lng: attraction.longitude,

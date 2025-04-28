@@ -11,8 +11,8 @@ import {CartItem} from '../types';
 
 interface CartItemCardProps {
     item: CartItem;
-    onDecrease: (id: number) => void;
-    onRemove: (id: number) => void;
+    onDecrease: (id: string) => void;
+    onRemove: (id: string) => void;
 }
 
 const CartItemCard = ({item, onDecrease, onRemove}: CartItemCardProps) => {

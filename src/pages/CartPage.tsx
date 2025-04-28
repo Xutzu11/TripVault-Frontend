@@ -51,7 +51,7 @@ const CartPage = () => {
         setCartItems(cart);
     }, []);
 
-    const handleDeleteCartItem = (eventID: number) => {
+    const handleDeleteCartItem = (eventID: string) => {
         const updatedCart = cartItems
             .map((item) => {
                 if (item.event.id === eventID) {
@@ -65,7 +65,7 @@ const CartPage = () => {
         setCartItems(updatedCart);
     };
 
-    const handleRemoveCartItem = (eventID: number) => {
+    const handleRemoveCartItem = (eventID: string) => {
         const updatedCart = cartItems
             .map((item) => {
                 if (item.event.id === eventID) {
