@@ -28,7 +28,7 @@ export class Attraction {
 
 export class Event {
     id: string;
-    attractionId: number;
+    attractionId: string;
     name: string;
     description: string;
     price: number;
@@ -37,7 +37,7 @@ export class Event {
 
     constructor(data: any) {
         this.id = data.id;
-        this.attractionId = Number(data.attraction_id);
+        this.attractionId = data.attraction_id;
         this.name = data.name;
         this.description = data.description;
         this.price = parseFloat(data.price);

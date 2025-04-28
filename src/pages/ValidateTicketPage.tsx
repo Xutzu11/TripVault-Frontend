@@ -16,6 +16,7 @@ import config from '../config.json';
 const ValidateTicketPage = () => {
     const [ticket, setTicket] = useState<{
         id: string;
+        status: string;
         photo: string;
     } | null>(null);
     const scannerRef = useRef<Html5QrcodeScanner | null>(null);
@@ -40,8 +41,9 @@ const ValidateTicketPage = () => {
                     })
                     .then((res) => {
                         setTicket({
-                            id: qrCodeMessage,
-                            photo: res.data,
+                            id: res.data.ticket.id,
+                            status: res.data.ticket.status,
+                            photo: res.data.url,
                         });
                     })
                     .catch((error) => {
@@ -60,9 +62,15 @@ const ValidateTicketPage = () => {
     const handleValidate = () => {
         if (ticket) {
             axios
-                .post(`${config.SERVER_URL}/api/ticket/validate`, {
-                    ticketId: ticket.id,
-                })
+                .put(
+                    `${config.SERVER_URL}/api/ticket/validate/${ticket.id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('token'),
+                        },
+                    },
+                )
                 .then((res) => {
                     console.log('Ticket validated successfully:', res.data);
                     setTicket(null);
@@ -79,9 +87,15 @@ const ValidateTicketPage = () => {
     const handleReject = () => {
         if (ticket) {
             axios
-                .post(`${config.SERVER_URL}/api/ticket/reject`, {
-                    ticketId: ticket.id,
-                })
+                .put(
+                    `${config.SERVER_URL}/api/ticket/expire/${ticket.id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('token'),
+                        },
+                    },
+                )
                 .then((res) => {
                     console.log('Ticket rejected successfully:', res.data);
                     setTicket(null);
@@ -148,56 +162,93 @@ const ValidateTicketPage = () => {
                     >
                         {ticket ? (
                             <>
-                                <Typography
-                                    variant='h5'
-                                    sx={{
-                                        color: '#d4b699',
-                                        marginBottom: 2,
-                                    }}
-                                >
-                                    Ticket: {ticket.id}
-                                </Typography>
-                                <CardMedia
-                                    component='img'
-                                    image={ticket.photo}
-                                    alt='Ticket Preview'
-                                    sx={{
-                                        borderRadius: '8px',
-                                        objectFit: 'cover',
-                                        width: '100%',
-                                        height: '100%',
-                                        marginBottom: '16px',
-                                    }}
-                                />
-                                <Stack direction='row' spacing={2}>
-                                    <Button
-                                        variant='contained'
-                                        color='success'
-                                        onClick={handleValidate}
-                                    >
-                                        Validate
-                                    </Button>
-                                    <Button
-                                        variant='contained'
-                                        color='error'
-                                        onClick={handleReject}
-                                    >
-                                        Reject
-                                    </Button>
-                                    <Button
-                                        variant='contained'
+                                {ticket.status === 'valid' ? (
+                                    <>
+                                        <Typography
+                                            variant='h5'
+                                            sx={{
+                                                color: '#d4b699',
+                                                marginBottom: 2,
+                                            }}
+                                        >
+                                            Ticket: {ticket.id}
+                                        </Typography>
+                                        <CardMedia
+                                            component='img'
+                                            image={ticket.photo}
+                                            alt='Ticket Preview'
+                                            sx={{
+                                                borderRadius: '8px',
+                                                objectFit: 'cover',
+                                                width: '100%',
+                                                height: '100%',
+                                                marginBottom: '16px',
+                                            }}
+                                        />
+                                        <Stack direction='row' spacing={2}>
+                                            <Button
+                                                variant='contained'
+                                                color='success'
+                                                onClick={handleValidate}
+                                            >
+                                                Validate
+                                            </Button>
+                                            <Button
+                                                variant='contained'
+                                                color='error'
+                                                onClick={handleReject}
+                                            >
+                                                Reject
+                                            </Button>
+                                            <Button
+                                                variant='contained'
+                                                sx={{
+                                                    backgroundColor: '#2196f3',
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            '#1976d2',
+                                                    },
+                                                }}
+                                                onClick={handlePass}
+                                            >
+                                                Pass
+                                            </Button>
+                                        </Stack>
+                                    </>
+                                ) : ticket.status === 'used' ? (
+                                    <Typography
+                                        variant='h6'
                                         sx={{
-                                            backgroundColor: '#2196f3',
-                                            color: 'white',
-                                            '&:hover': {
-                                                backgroundColor: '#1976d2',
-                                            },
+                                            color: '#f44336', // red color for used
+                                            textAlign: 'center',
                                         }}
-                                        onClick={handlePass}
                                     >
-                                        Pass
-                                    </Button>
-                                </Stack>
+                                        Ticket has already been used. Please try
+                                        another one.
+                                    </Typography>
+                                ) : ticket.status === 'expired' ? (
+                                    <Typography
+                                        variant='h6'
+                                        sx={{
+                                            color: '#f44336', // red color for expired
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Ticket has expired. Please try another
+                                        one.
+                                    </Typography>
+                                ) : (
+                                    <Typography
+                                        variant='h6'
+                                        sx={{
+                                            color: '#d4b699',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Unknown ticket status.
+                                    </Typography>
+                                )}
                             </>
                         ) : (
                             <Typography
