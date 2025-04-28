@@ -63,6 +63,7 @@ const TopNavBar = () => {
                             navigation='/attractions'
                         />
                         <NavButton label='Events' navigation='/events' />
+                        <NavButton label='Validator' navigation='/validate' />
                     </Box>
                     <Box
                         sx={{

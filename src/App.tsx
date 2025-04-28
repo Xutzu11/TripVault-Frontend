@@ -12,6 +12,7 @@ import MapPage from './pages/MapPage';
 import ProfilePage from './pages/ProfilePage';
 import RegisterPage from './pages/RegisterPage';
 import SuccessPage from './pages/SuccessPage';
+import ValidateTicketPage from './pages/ValidateTicketPage';
 
 function App() {
     return (
@@ -35,14 +36,15 @@ function App() {
                         path='/events/:attractionID?'
                         element={<EventsPage />}
                     />
+                    <Route path='/events/add' element={<AddEventPage />} />
                     <Route
                         path='/events/edit/:eventId'
                         element={<EditEventPage />}
                     />
-                    <Route path='/events/add' element={<AddEventPage />} />
                     <Route path='/map' element={<MapPage />} />
                     <Route path='/cart' element={<CartPage />} />
                     <Route path='/success' element={<SuccessPage />} />
+                    <Route path='/validate' element={<ValidateTicketPage />} />
                 </Routes>
             </BrowserRouter>
         </>
