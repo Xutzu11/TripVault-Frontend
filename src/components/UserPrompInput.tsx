@@ -1,16 +1,29 @@
 import {Send} from '@mui/icons-material';
 import {Box, IconButton, Paper, TextField} from '@mui/material';
+import axios from 'axios';
 import {useState} from 'react';
+import config from '../config.json';
 
 const UserPromptInput = () => {
     const [input, setInput] = useState('');
 
-    const handleSubmit = () => {
-        // TODO: Handle the input submission logic here
-        if (input.trim()) {
-            console.log('User Prompt:', input);
-            setInput('');
+    const handleSubmit = async () => {
+        console.log('User Prompt:', input);
+        const response = await axios.get(
+            `${config.SERVER_URL}/api/path/prompt`,
+            {
+                params: {prompt: input},
+                headers: {
+                    Authorization: localStorage.getItem('token') || '',
+                },
+            },
+        );
+        if (response.status === 200) {
+            console.log('Response:', response.data);
+        } else {
+            console.error('Error:', response.statusText);
         }
+        setInput('');
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {

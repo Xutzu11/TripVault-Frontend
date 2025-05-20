@@ -12,6 +12,11 @@ import {useEffect, useRef, useState} from 'react';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
 import config from '../config.json';
+import {
+    PassTicketCommand,
+    RejectTicketCommand,
+    ValidateTicketCommand,
+} from '../utils/TicketCommand';
 
 const ValidateTicketPage = () => {
     const [ticket, setTicket] = useState<{
@@ -61,56 +66,25 @@ const ValidateTicketPage = () => {
 
     const handleValidate = () => {
         if (ticket) {
-            axios
-                .put(
-                    `${config.SERVER_URL}/api/ticket/validate/${ticket.id}`,
-                    {},
-                    {
-                        headers: {
-                            Authorization: localStorage.getItem('token'),
-                        },
-                    },
-                )
-                .then((res) => {
-                    console.log('Ticket validated successfully:', res.data);
-                    setTicket(null);
-                })
-                .catch((error) => {
-                    console.error('Error validating ticket:', error);
-                    setTicket(null);
-                });
-        } else {
-            console.error('No ticket ID to validate.');
+            const command = new ValidateTicketCommand(ticket.id, () =>
+                setTicket(null),
+            );
+            command.execute();
         }
     };
 
     const handleReject = () => {
         if (ticket) {
-            axios
-                .put(
-                    `${config.SERVER_URL}/api/ticket/expire/${ticket.id}`,
-                    {},
-                    {
-                        headers: {
-                            Authorization: localStorage.getItem('token'),
-                        },
-                    },
-                )
-                .then((res) => {
-                    console.log('Ticket rejected successfully:', res.data);
-                    setTicket(null);
-                })
-                .catch((error) => {
-                    console.error('Error rejecting ticket:', error);
-                    setTicket(null);
-                });
-        } else {
-            console.error('No ticket ID to reject.');
+            const command = new RejectTicketCommand(ticket.id, () =>
+                setTicket(null),
+            );
+            command.execute();
         }
     };
 
     const handlePass = () => {
-        setTicket(null);
+        const command = new PassTicketCommand(() => setTicket(null));
+        command.execute();
     };
 
     return (
