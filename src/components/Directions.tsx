@@ -14,6 +14,7 @@ function Directions({
     closeAttractions,
     setCloseAttractions,
     maxDistance,
+    maxPrice,
     minRating,
     nrAttractions,
     refetchRoute,
@@ -29,6 +30,7 @@ function Directions({
     closeAttractions: Attraction[];
     setCloseAttractions: (closeAttractions: Attraction[]) => void;
     maxDistance: number;
+    maxPrice: number;
     minRating: number;
     nrAttractions: number;
     refetchRoute: boolean;
@@ -77,11 +79,12 @@ function Directions({
     useEffect(() => {
         if (!selectedPosition) return;
         axios
-            .get(`${config.SERVER_URL}/api/attractions/closest`, {
+            .get(`${config.SERVER_URL}/api/path/optimal`, {
                 params: {
                     latitude: selectedPosition.lat,
                     longitude: selectedPosition.lng,
                     max_distance: maxDistance,
+                    max_price: maxPrice,
                     min_rating: minRating,
                     nr_attractions: nrAttractions,
                 },

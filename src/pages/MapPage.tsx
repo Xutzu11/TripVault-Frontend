@@ -66,6 +66,7 @@ const MapPage = () => {
     const [closeAttractions, setCloseAttractions] = useState<Attraction[]>([]);
     const [minRating, setMinRating] = useState(0);
     const [maxAttractions, setMaxAttractions] = useState(9);
+    const [maxPrice, setMaxPrice] = useState(1000);
     const [maxDistance, setMaxDistance] = useState(20);
     const [refetchRoute, setRefetchRoute] = useState(false);
     const [transportMode, setTransportMode] = useState<google.maps.TravelMode>(
@@ -127,8 +128,9 @@ const MapPage = () => {
 
     const handleResetFilters = () => {
         setMinRating(0);
-        setMaxAttractions(9);
-        setMaxDistance(20);
+        setMaxAttractions(20);
+        setMaxPrice(200);
+        setMaxDistance(50);
         setRefetchRoute(true);
     };
 
@@ -197,6 +199,7 @@ const MapPage = () => {
                         closeAttractions={closeAttractions}
                         setCloseAttractions={setCloseAttractions}
                         maxDistance={maxDistance}
+                        maxPrice={maxPrice}
                         minRating={minRating}
                         nrAttractions={maxAttractions}
                         refetchRoute={refetchRoute}
@@ -240,13 +243,23 @@ const MapPage = () => {
                     setMaxAttractions={setMaxAttractions}
                     maxDistance={maxDistance}
                     setMaxDistance={setMaxDistance}
+                    maxPrice={maxPrice}
+                    setMaxPrice={setMaxPrice}
                     onSearchRoute={handleSearchRoute}
                     onResetFilters={handleResetFilters}
                     transportMode={transportMode}
                     setTransportMode={setTransportMode}
                 />
             </div>
-            <UserPromptInput />
+            <UserPromptInput
+                setSelectedPosition={setSelectedPosition}
+                setMinRating={setMinRating}
+                setMaxAttractions={setMaxAttractions}
+                setMaxDistance={setMaxDistance}
+                setMaxPrice={setMaxPrice}
+                onSearchRoute={handleSearchRoute}
+                setTransportMode={setTransportMode}
+            />
         </APIProvider>
     ) : (
         <LoadingScreen />

@@ -9,7 +9,6 @@ import {
     Card,
     CardContent,
     Slider,
-    TextField,
     Typography,
 } from '@mui/material';
 
@@ -20,6 +19,8 @@ interface MapFiltersPanelProps {
     setMaxAttractions: (value: number) => void;
     maxDistance: number;
     setMaxDistance: (value: number) => void;
+    maxPrice: number;
+    setMaxPrice: (value: number) => void;
     onSearchRoute: () => void;
     onResetFilters: () => void;
     transportMode: google.maps.TravelMode;
@@ -33,6 +34,8 @@ const MapFiltersPanel = ({
     setMaxAttractions,
     maxDistance,
     setMaxDistance,
+    maxPrice,
+    setMaxPrice,
     onSearchRoute,
     onResetFilters,
     transportMode,
@@ -63,21 +66,28 @@ const MapFiltersPanel = ({
                         valueLabelDisplay='auto'
                     />
                     <Typography sx={{marginTop: 1}} variant='subtitle2'>
+                        Maximum Price ($)
+                    </Typography>
+                    <Slider
+                        value={maxPrice}
+                        onChange={(_, value) => setMaxPrice(value as number)}
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay='auto'
+                    />
+                    <Typography sx={{marginTop: 1}} variant='subtitle2'>
                         Maximum Attractions
                     </Typography>
-                    <TextField
-                        type='number'
+                    <Slider
                         value={maxAttractions}
-                        onChange={(e) =>
-                            setMaxAttractions(
-                                Math.min(
-                                    Math.max(parseInt(e.target.value), 1),
-                                    9,
-                                ),
-                            )
+                        onChange={(_, value) =>
+                            setMaxAttractions(value as number)
                         }
-                        inputProps={{min: 1, max: 9}}
-                        fullWidth
+                        min={1}
+                        max={20}
+                        step={1}
+                        valueLabelDisplay='auto'
                     />
                     <Typography sx={{marginTop: 1}} variant='subtitle2'>
                         Maximum Distance (km)
@@ -86,7 +96,7 @@ const MapFiltersPanel = ({
                         value={maxDistance}
                         onChange={(_, value) => setMaxDistance(value as number)}
                         min={0}
-                        max={20}
+                        max={50}
                         step={0.5}
                         valueLabelDisplay='auto'
                     />

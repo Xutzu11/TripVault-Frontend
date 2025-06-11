@@ -2,13 +2,34 @@ import {Send} from '@mui/icons-material';
 import {Box, IconButton, Paper, TextField} from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react';
+import {fromAddress, setKey} from 'react-geocode';
 import config from '../config.json';
+import {MapPosition} from '../types';
 
-const UserPromptInput = () => {
+const UserPromptInput = ({
+    setSelectedPosition,
+    setMinRating,
+    setMaxAttractions,
+    setMaxDistance,
+    setMaxPrice,
+    onSearchRoute,
+    setTransportMode,
+}: {
+    setSelectedPosition: (value: MapPosition | null) => void;
+    setMinRating: (value: number) => void;
+    setMaxAttractions: (value: number) => void;
+    setMaxDistance: (value: number) => void;
+    setMaxPrice: (value: number) => void;
+    onSearchRoute: () => void;
+    setTransportMode: (mode: google.maps.TravelMode) => void;
+}) => {
     const [input, setInput] = useState('');
 
+    useState(() => {
+        setKey(config.REACT_APP_GOOGLE_MAPS_API_KEY);
+    });
+
     const handleSubmit = async () => {
-        console.log('User Prompt:', input);
         const response = await axios.get(
             `${config.SERVER_URL}/api/path/prompt`,
             {
@@ -19,11 +40,23 @@ const UserPromptInput = () => {
             },
         );
         if (response.status === 200) {
-            console.log('Response:', response.data);
+            fromAddress(response.data.address).then(({results}) => {
+                const {lat, lng} = results[0].geometry.location;
+                setSelectedPosition({lat, lng});
+            });
+            setMaxAttractions(response.data.attractions);
+            setTransportMode(response.data.transport);
+            setMaxDistance(response.data.distance);
+            // rating not exist: setMinRating(response.data.min_rating);
+            setMinRating(0);
+            // i need to also implement the logic for price: setMaxPrice(response.data.max_price);
+            setMaxPrice(200);
+            // i get time but i dont use it: setMaxTime(response.data.time);
         } else {
             console.error('Error:', response.statusText);
         }
         setInput('');
+        onSearchRoute();
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
