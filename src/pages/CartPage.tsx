@@ -14,7 +14,6 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import CartItemCard from '../components/CardItemCard';
-import config from '../config.json';
 import theme from '../theme';
 import {CartItem} from '../types';
 
@@ -28,11 +27,14 @@ const CartPage = () => {
                     return;
                 }
 
-                await axios.get(`${config.SERVER_URL}/api/access/user`, {
-                    headers: {
-                        Authorization: token,
+                await axios.get(
+                    `${import.meta.env.VITE_SERVER_URL}/api/access/user`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
                     },
-                });
+                );
             } catch (error) {
                 nav('/');
             }
@@ -92,7 +94,9 @@ const CartPage = () => {
         setIsProcessing(true);
 
         try {
-            const stripe = await loadStripe(config.STRIPE_PUBLIC_KEY);
+            const stripe = await loadStripe(
+                import.meta.env.VITE_STRIPE_PUBLIC_KEY,
+            );
 
             const totalAmount = Math.round(
                 cartItems.reduce(
@@ -102,7 +106,7 @@ const CartPage = () => {
             );
 
             const response = await axios.post(
-                `${config.SERVER_URL}/api/stripe/create-checkout-session`,
+                `${import.meta.env.VITE_SERVER_URL}/api/stripe/create-checkout-session`,
                 {
                     amount: totalAmount,
                 },

@@ -15,7 +15,6 @@ import EventsFiltersPanel from '../components/EventsFiltersPanel';
 import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {Attraction, City, Event, State} from '../types';
 
 function EventsPage() {
@@ -40,7 +39,7 @@ function EventsPage() {
             return;
         }
         axios
-            .get(`${config.SERVER_URL}/api/access/user`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/user`, {
                 headers: {Authorization: token},
             })
             .then((_) => {
@@ -48,9 +47,12 @@ function EventsPage() {
             })
             .catch((_) => {
                 axios
-                    .get(`${config.SERVER_URL}/api/access/admin`, {
-                        headers: {Authorization: token},
-                    })
+                    .get(
+                        `${import.meta.env.VITE_SERVER_URL}/api/access/admin`,
+                        {
+                            headers: {Authorization: token},
+                        },
+                    )
                     .then((_) => {
                         setUserType('admin');
                     })
@@ -65,7 +67,7 @@ function EventsPage() {
         try {
             if (attractionID !== undefined) {
                 const attractionResponse = await axios.get(
-                    `${config.SERVER_URL}/api/attraction/${attractionID}`,
+                    `${import.meta.env.VITE_SERVER_URL}/api/attraction/${attractionID}`,
                     {
                         headers: {
                             Authorization: localStorage.getItem('token'),
@@ -76,7 +78,7 @@ function EventsPage() {
             }
 
             const eventsResponse = await axios.get(
-                `${config.SERVER_URL}/api/events/from/${(page - 1) * PAGE_EVENTS + 1}/to/${page * PAGE_EVENTS}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/events/from/${(page - 1) * PAGE_EVENTS + 1}/to/${page * PAGE_EVENTS}`,
                 {
                     params: {
                         attractionID: attractionID,
@@ -96,7 +98,7 @@ function EventsPage() {
             );
 
             const countResponse = await axios.get(
-                `${config.SERVER_URL}/api/events/count`,
+                `${import.meta.env.VITE_SERVER_URL}/api/events/count`,
                 {
                     params: {
                         attractionID: attractionID,
@@ -128,11 +130,14 @@ function EventsPage() {
         );
         if (!confirmDelete) return;
         axios
-            .delete(`${config.SERVER_URL}/api/event/delete/${eventID}`, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
+            .delete(
+                `${import.meta.env.VITE_SERVER_URL}/api/event/delete/${eventID}`,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                    },
                 },
-            })
+            )
             .then((response) => {
                 console.log(response);
                 setEvents((prevEvents) =>
@@ -157,7 +162,7 @@ function EventsPage() {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/states`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/states`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -171,7 +176,7 @@ function EventsPage() {
     useEffect(() => {
         if (filters.state) {
             axios
-                .get(`${config.SERVER_URL}/api/cities`, {
+                .get(`${import.meta.env.VITE_SERVER_URL}/api/cities`, {
                     params: {state: filters.state},
                     headers: {
                         Authorization: localStorage.getItem('token'),

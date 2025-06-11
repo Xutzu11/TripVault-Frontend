@@ -1,6 +1,5 @@
 import {Box, CardMedia, Rating, Typography} from '@mui/material';
 import {InfoWindow} from '@vis.gl/react-google-maps';
-import config from '../config.json';
 import {Attraction, MapPosition} from '../types';
 
 interface AttractionInfoWindowProps {
@@ -52,7 +51,7 @@ const AttractionInfoWindow = ({
                 />
                 <CardMedia
                     component='img'
-                    image={`${config.GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
+                    image={`${import.meta.env.VITE_GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
                     alt='Attraction'
                     sx={{
                         width: '100%',

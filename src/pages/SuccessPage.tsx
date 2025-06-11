@@ -4,7 +4,6 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
-import config from '../config.json';
 
 const SuccessPage = () => {
     const [searchParams] = useSearchParams();
@@ -21,7 +20,9 @@ const SuccessPage = () => {
         }
 
         axios
-            .get(`${config.SERVER_URL}/api/stripe/verify-session/${sessionId}`)
+            .get(
+                `${import.meta.env.VITE_SERVER_URL}/api/stripe/verify-session/${sessionId}`,
+            )
             .then((res) => {
                 if (res.data.paid) {
                     setValid(true);
@@ -34,7 +35,7 @@ const SuccessPage = () => {
                         const events = localStorage.getItem('eventsCart');
                         const parsedEvents = JSON.parse(events || '[]');
                         axios.post(
-                            `${config.SERVER_URL}/api/purchase`,
+                            `${import.meta.env.VITE_SERVER_URL}/api/purchase`,
                             {
                                 cart: parsedEvents,
                             },

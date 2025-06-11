@@ -13,7 +13,6 @@ import {
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import config from '../config.json';
 import {AttractionFormData, City, MapPosition, State} from '../types';
 import MapSelector from './MapSelector';
 
@@ -50,7 +49,7 @@ const AttractionForm = ({
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/states`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/states`, {
                 headers: {Authorization: localStorage.getItem('token')},
             })
             .then((res) =>
@@ -61,7 +60,7 @@ const AttractionForm = ({
     useEffect(() => {
         if (formData.state) {
             axios
-                .get(`${config.SERVER_URL}/api/cities`, {
+                .get(`${import.meta.env.VITE_SERVER_URL}/api/cities`, {
                     params: {state: formData.state},
                     headers: {Authorization: localStorage.getItem('token')},
                 })

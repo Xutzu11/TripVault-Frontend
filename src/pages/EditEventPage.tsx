@@ -6,7 +6,6 @@ import {useNavigate, useParams} from 'react-router-dom';
 import EventForm from '../components/EventForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {EventFormData} from '../types';
 
 const EditEventPage = () => {
@@ -27,7 +26,7 @@ const EditEventPage = () => {
         if (!token) return nav('/');
 
         axios
-            .get(`${config.SERVER_URL}/api/access/admin`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/admin`, {
                 headers: {Authorization: token},
             })
             .catch(() => {
@@ -38,7 +37,7 @@ const EditEventPage = () => {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/attractions`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/attractions`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -48,7 +47,7 @@ const EditEventPage = () => {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/event/${eventId}`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/event/${eventId}`, {
                 headers: {Authorization: localStorage.getItem('token')},
             })
             .then((res) => {
@@ -80,7 +79,7 @@ const EditEventPage = () => {
             data.append('endDate', toMySQLDate(formData.endDate.toDate()));
             data.append('attractionId', formData.attractionId.toString());
             await axios.put(
-                `${config.SERVER_URL}/api/event/edit/${eventId}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/event/edit/${eventId}`,
                 data,
                 {
                     headers: {

@@ -3,7 +3,6 @@ import {Box, IconButton, Paper, TextField} from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react';
 import {fromAddress, setKey} from 'react-geocode';
-import config from '../config.json';
 import {MapPosition} from '../types';
 
 const UserPromptInput = ({
@@ -26,12 +25,12 @@ const UserPromptInput = ({
     const [input, setInput] = useState('');
 
     useState(() => {
-        setKey(config.REACT_APP_GOOGLE_MAPS_API_KEY);
+        setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
     });
 
     const handleSubmit = async () => {
         const response = await axios.get(
-            `${config.SERVER_URL}/api/path/prompt`,
+            `${import.meta.env.VITE_SERVER_URL}/api/path/prompt`,
             {
                 params: {prompt: input},
                 headers: {

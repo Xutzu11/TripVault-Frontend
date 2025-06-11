@@ -3,7 +3,6 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
-import config from '../config.json';
 
 const LoginPage = () => {
     const nav = useNavigate();
@@ -13,7 +12,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/access`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -43,7 +42,7 @@ const LoginPage = () => {
     const handleLogin = async () => {
         try {
             const response = await axios.get(
-                `${config.SERVER_URL}/api/login/${username}/${password}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/login/${username}/${password}`,
             );
             if (response.status === 200) {
                 localStorage.setItem('token', response.data);

@@ -11,7 +11,6 @@ import {Html5QrcodeScanner} from 'html5-qrcode';
 import {useEffect, useRef, useState} from 'react';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {
     PassTicketCommand,
     RejectTicketCommand,
@@ -39,11 +38,14 @@ const ValidateTicketPage = () => {
         scanner.render(
             (qrCodeMessage) => {
                 axios
-                    .get(`${config.SERVER_URL}/api/ticket/${qrCodeMessage}`, {
-                        headers: {
-                            Authorization: localStorage.getItem('token'),
+                    .get(
+                        `${import.meta.env.VITE_SERVER_URL}/api/ticket/${qrCodeMessage}`,
+                        {
+                            headers: {
+                                Authorization: localStorage.getItem('token'),
+                            },
                         },
-                    })
+                    )
                     .then((res) => {
                         setTicket({
                             id: res.data.ticket.id,

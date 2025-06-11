@@ -5,7 +5,6 @@ import {useNavigate, useParams} from 'react-router-dom';
 import AttractionForm from '../components/AttractionForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {AttractionFormData, MapPosition} from '../types';
 
 const EditAttractionPage = () => {
@@ -32,7 +31,7 @@ const EditAttractionPage = () => {
         if (!token) return nav('/');
 
         axios
-            .get(`${config.SERVER_URL}/api/access/admin`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/admin`, {
                 headers: {Authorization: token},
             })
             .catch(() => {
@@ -44,9 +43,12 @@ const EditAttractionPage = () => {
     useEffect(() => {
         if (!attractionID) return;
         axios
-            .get(`${config.SERVER_URL}/api/attraction/${attractionID}`, {
-                headers: {Authorization: localStorage.getItem('token')},
-            })
+            .get(
+                `${import.meta.env.VITE_SERVER_URL}/api/attraction/${attractionID}`,
+                {
+                    headers: {Authorization: localStorage.getItem('token')},
+                },
+            )
             .then((res) => {
                 console.log(res.data);
                 setFormData({
@@ -83,7 +85,7 @@ const EditAttractionPage = () => {
             data.append('photo', formData.photo as Blob);
 
             await axios.put(
-                `${config.SERVER_URL}/api/attraction/edit/${attractionID}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/attraction/edit/${attractionID}`,
                 data,
                 {
                     headers: {

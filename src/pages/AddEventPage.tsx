@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom';
 import EventForm from '../components/EventForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {Attraction, EventFormData} from '../types';
 
 const AddEventPage = () => {
@@ -26,7 +25,7 @@ const AddEventPage = () => {
         if (!token) return nav('/');
 
         axios
-            .get(`${config.SERVER_URL}/api/access/admin`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/admin`, {
                 headers: {Authorization: token},
             })
             .catch(() => {
@@ -37,7 +36,7 @@ const AddEventPage = () => {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/attractions`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/attractions`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -66,12 +65,16 @@ const AddEventPage = () => {
             data.append('startDate', toMySQLDate(formData.startDate.toDate()));
             data.append('endDate', toMySQLDate(formData.endDate.toDate()));
             data.append('attractionId', formData.attractionId.toString());
-            await axios.post(`${config.SERVER_URL}/api/event/add`, data, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
-                    'Content-Type': 'multipart/form-data',
+            await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/event/add`,
+                data,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            });
+            );
 
             alert('Event added!');
             nav('/events');

@@ -16,7 +16,6 @@ import {
     Typography,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import config from '../config.json';
 import {Attraction} from '../types';
 
 interface AttractionCardProps {
@@ -47,7 +46,7 @@ const AttractionCard = ({
                     component='img'
                     alt={attraction.name}
                     height='220'
-                    image={`${config.GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
+                    image={`${import.meta.env.VITE_GOOGLE_BUCKET_URL}/${attraction.photoPath}`}
                 />
                 <CardContent>
                     <Typography gutterBottom variant='h5' component='div'>

@@ -5,7 +5,6 @@ import {useNavigate} from 'react-router-dom';
 import AttractionForm from '../components/AttractionForm';
 import Footer from '../components/Footer';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {AttractionFormData, MapPosition} from '../types';
 
 const AddAttractionPage = () => {
@@ -31,7 +30,7 @@ const AddAttractionPage = () => {
         if (!token) return nav('/');
 
         axios
-            .get(`${config.SERVER_URL}/api/access/admin`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/admin`, {
                 headers: {Authorization: token},
             })
             .catch(() => {
@@ -60,12 +59,16 @@ const AddAttractionPage = () => {
             data.append('longitude', position.lng.toString());
             data.append('photo', formData.photo as Blob);
 
-            await axios.post(`${config.SERVER_URL}/api/attraction/add`, data, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
-                    'Content-Type': 'multipart/form-data',
+            await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/attraction/add`,
+                data,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            });
+            );
 
             alert('Attraction added!');
             nav('/attractions');

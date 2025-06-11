@@ -16,7 +16,6 @@ import AttractionsFiltersPanel from '../components/AttractionsFiltersPanel';
 import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
-import config from '../config.json';
 import {Attraction, City, State} from '../types';
 
 function AttractionsPage() {
@@ -33,7 +32,7 @@ function AttractionsPage() {
             return;
         }
         axios
-            .get(`${config.SERVER_URL}/api/access/user`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access/user`, {
                 headers: {Authorization: token},
             })
             .then((_) => {
@@ -41,9 +40,12 @@ function AttractionsPage() {
             })
             .catch((_) => {
                 axios
-                    .get(`${config.SERVER_URL}/api/access/admin`, {
-                        headers: {Authorization: token},
-                    })
+                    .get(
+                        `${import.meta.env.VITE_SERVER_URL}/api/access/admin`,
+                        {
+                            headers: {Authorization: token},
+                        },
+                    )
                     .then((_) => {
                         setUserType('admin');
                     })
@@ -65,7 +67,7 @@ function AttractionsPage() {
     useEffect(() => {
         axios
             .get(
-                `${config.SERVER_URL}/api/attractions/from/${(currentPage - 1) * PAGE_ATTRACTIONS + 1}/to/${currentPage * PAGE_ATTRACTIONS}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/attractions/from/${(currentPage - 1) * PAGE_ATTRACTIONS + 1}/to/${currentPage * PAGE_ATTRACTIONS}`,
                 {
                     params: {
                         sortingOption: sortingOption,
@@ -89,7 +91,7 @@ function AttractionsPage() {
                 );
             });
         axios
-            .get(`${config.SERVER_URL}/api/attractions/count`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/attractions/count`, {
                 params: {
                     name: filters.name,
                     theme: filters.theme,
@@ -116,7 +118,7 @@ function AttractionsPage() {
         if (!confirmDelete) return;
         axios
             .delete(
-                `${config.SERVER_URL}/api/attraction/delete/${attractionId}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/attraction/delete/${attractionId}`,
                 {
                     params: {
                         userType: userType,
@@ -164,7 +166,7 @@ function AttractionsPage() {
     // Getting the states
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/states`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/states`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -181,7 +183,7 @@ function AttractionsPage() {
     useEffect(() => {
         if (filters.state) {
             axios
-                .get(`${config.SERVER_URL}/api/cities`, {
+                .get(`${import.meta.env.VITE_SERVER_URL}/api/cities`, {
                     params: {state: filters.state},
                     headers: {
                         Authorization: localStorage.getItem('token'),

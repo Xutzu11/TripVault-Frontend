@@ -1,7 +1,6 @@
 import {useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import config from '../config.json';
 import {Attraction} from '../types';
 
 function Directions({
@@ -79,7 +78,7 @@ function Directions({
     useEffect(() => {
         if (!selectedPosition) return;
         axios
-            .get(`${config.SERVER_URL}/api/path/optimal`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/path/optimal`, {
                 params: {
                     latitude: selectedPosition.lat,
                     longitude: selectedPosition.lng,

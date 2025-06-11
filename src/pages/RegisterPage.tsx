@@ -3,7 +3,6 @@ import axios from 'axios';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import RegisterForm from '../components/RegisterForm';
-import config from '../config.json';
 
 const RegisterPage = () => {
     const nav = useNavigate();
@@ -52,7 +51,7 @@ const RegisterPage = () => {
 
         try {
             const response = await axios.post(
-                `${config.SERVER_URL}/api/register`,
+                `${import.meta.env.VITE_SERVER_URL}/api/register`,
                 {
                     Username: username,
                     FirstName: firstName,

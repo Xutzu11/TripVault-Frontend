@@ -1,6 +1,5 @@
 import {Box} from '@mui/material';
 import {AdvancedMarker, APIProvider, Map, Pin} from '@vis.gl/react-google-maps';
-import config from '../config.json';
 import {MapPosition} from '../types';
 
 const containerStyle = {
@@ -22,9 +21,9 @@ const MapSelector = ({
 }) => {
     return (
         <Box sx={{mt: 2}}>
-            <APIProvider apiKey={config.REACT_APP_GOOGLE_MAPS_API_KEY}>
+            <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
                 <Map
-                    mapId={config.NEXT_PUBLIC_MAP_ID}
+                    mapId={import.meta.env.VITE_MAP_ID}
                     style={containerStyle}
                     defaultCenter={position || defaultCenter}
                     defaultZoom={6}

@@ -12,7 +12,6 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
-import config from '../config.json';
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({
@@ -32,7 +31,7 @@ const ProfilePage = () => {
             return;
         }
         axios
-            .get(`${config.SERVER_URL}/api/access`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/access`, {
                 headers: {Authorization: token},
             })
             .then((res) => {

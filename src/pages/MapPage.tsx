@@ -16,7 +16,6 @@ import PlacesAutocompleteBox from '../components/PlacesAutocompleteBox';
 import RouteInfoCard from '../components/RouteInfoCard';
 import UserMarker from '../components/UserMarker';
 import UserPromptInput from '../components/UserPrompInput';
-import config from '../config.json';
 import {Attraction, MapPosition} from '../types';
 
 const MapPage = () => {
@@ -30,11 +29,14 @@ const MapPage = () => {
                     return;
                 }
 
-                await axios.get(`${config.SERVER_URL}/api/access/user`, {
-                    headers: {
-                        Authorization: token,
+                await axios.get(
+                    `${import.meta.env.VITE_SERVER_URL}/api/access/user`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
                     },
-                });
+                );
             } catch (error) {
                 nav('/');
             }
@@ -44,7 +46,7 @@ const MapPage = () => {
 
     // Load Google Maps API
     const {isLoaded} = useLoadScript({
-        googleMapsApiKey: config.REACT_APP_GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
         libraries: ['places'],
     });
 
@@ -84,7 +86,7 @@ const MapPage = () => {
 
     useEffect(() => {
         axios
-            .get(`${config.SERVER_URL}/api/attractions/`, {
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/attractions/`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -139,7 +141,7 @@ const MapPage = () => {
     };
 
     return isLoaded ? (
-        <APIProvider apiKey={config.REACT_APP_GOOGLE_MAPS_API_KEY}>
+        <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <div
                 style={{
                     height: '100vh',
@@ -177,7 +179,7 @@ const MapPage = () => {
                 </Button>
                 <Map
                     fullscreenControl={false}
-                    mapId={config.NEXT_PUBLIC_MAP_ID}
+                    mapId={import.meta.env.VITE_MAP_ID}
                     defaultZoom={11}
                     defaultCenter={userPosition ? userPosition : centerPosition}
                     mapTypeControl={false}
