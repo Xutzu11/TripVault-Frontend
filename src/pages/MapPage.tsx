@@ -1,7 +1,7 @@
 'use client';
 
 import {ArrowBack, LocationOn} from '@mui/icons-material';
-import {Button} from '@mui/material';
+import {Button, useMediaQuery, useTheme} from '@mui/material';
 import {useLoadScript} from '@react-google-maps/api';
 import {AdvancedMarker, APIProvider, Map, Pin} from '@vis.gl/react-google-maps';
 import axios from 'axios';
@@ -43,6 +43,11 @@ const MapPage = () => {
         };
         fetchData();
     }, []);
+
+    // Check for mobile view
+    const [showFilters, setShowFilters] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     // Load Google Maps API
     const {isLoaded} = useLoadScript({
@@ -238,19 +243,35 @@ const MapPage = () => {
                         onNextLeg={handleNextLeg}
                     />
                 )}
+                <Button
+                    onClick={() => setShowFilters(true)}
+                    sx={{
+                        position: 'absolute',
+                        bottom: 45,
+                        left: 4,
+                        display: {xs: 'block', md: 'none'},
+                        backgroundColor: '#ad9267',
+                        color: 'white',
+                    }}
+                >
+                    Filters
+                </Button>
+
                 <MapFiltersPanel
                     minRating={minRating}
                     setMinRating={setMinRating}
-                    maxAttractions={maxAttractions}
-                    setMaxAttractions={setMaxAttractions}
-                    maxDistance={maxDistance}
-                    setMaxDistance={setMaxDistance}
                     maxPrice={maxPrice}
                     setMaxPrice={setMaxPrice}
-                    onSearchRoute={handleSearchRoute}
-                    onResetFilters={handleResetFilters}
+                    maxDistance={maxDistance}
+                    setMaxDistance={setMaxDistance}
+                    maxAttractions={maxAttractions}
+                    setMaxAttractions={setMaxAttractions}
                     transportMode={transportMode}
                     setTransportMode={setTransportMode}
+                    onSearchRoute={handleSearchRoute}
+                    onResetFilters={handleResetFilters}
+                    open={showFilters}
+                    onClose={() => setShowFilters(false)}
                 />
             </div>
             <UserPromptInput
