@@ -18,12 +18,13 @@ const SuccessPage = () => {
             nav('/');
             return;
         }
-
+        console.log('Verifying session:', sessionId);
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_URL}/api/stripe/verify-session/${sessionId}`,
             )
             .then((res) => {
+                console.log('Session verification response:', res.data);
                 if (res.data.paid) {
                     setValid(true);
                     try {
@@ -34,6 +35,7 @@ const SuccessPage = () => {
                         }
                         const events = localStorage.getItem('eventsCart');
                         const parsedEvents = JSON.parse(events || '[]');
+                        console.log('Parsed events:', parsedEvents);
                         axios.post(
                             `${import.meta.env.VITE_SERVER_URL}/api/purchase`,
                             {
