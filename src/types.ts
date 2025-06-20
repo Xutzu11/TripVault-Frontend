@@ -26,6 +26,60 @@ export class Attraction {
     }
 }
 
+export class AttractionWithLocation {
+    id: string;
+    name: string;
+    cityId: number;
+    theme: string;
+    revenue: number;
+    rating: number;
+    latitude: number;
+    longitude: number;
+    photoPath: string;
+    cityName: string;
+    stateName: string;
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.name = data.name;
+        this.cityId = Number(data.city_id);
+        this.theme = data.theme;
+        this.revenue = parseFloat(data.revenue);
+        this.rating = parseFloat(data.rating);
+        this.latitude = parseFloat(data.latitude);
+        this.longitude = parseFloat(data.longitude);
+        this.photoPath = data.photo_path;
+        this.cityName = data.city_name;
+        this.stateName = data.state_name;
+    }
+}
+
+export class AttractionWithPrice {
+    id: string;
+    name: string;
+    cityId: number;
+    theme: string;
+    revenue: number;
+    rating: number;
+    latitude: number;
+    longitude: number;
+    photoPath: string;
+    price: number;
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.name = data.name;
+        this.cityId = Number(data.city_id);
+        this.theme = data.theme;
+        this.revenue = parseFloat(data.revenue);
+        this.rating = parseFloat(data.rating);
+        this.latitude = parseFloat(data.latitude);
+        this.longitude = parseFloat(data.longitude);
+        this.photoPath = data.photo_path;
+        this.price = parseFloat(data.price);
+    }
+}
+
 export class Event {
     id: string;
     attractionId: string;

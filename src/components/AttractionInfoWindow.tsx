@@ -1,5 +1,14 @@
-import {Box, CardMedia, Rating, Typography} from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import {
+    Box,
+    CardMedia,
+    IconButton,
+    Rating,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import {InfoWindow} from '@vis.gl/react-google-maps';
+import {useNavigate} from 'react-router-dom';
 import {Attraction, MapPosition} from '../types';
 
 interface AttractionInfoWindowProps {
@@ -13,12 +22,15 @@ const AttractionInfoWindow = ({
     centerPosition,
     onClose,
 }: AttractionInfoWindowProps) => {
+    const nav = useNavigate();
+
     if (attraction === null) return null;
 
     return (
         <InfoWindow position={centerPosition} onCloseClick={onClose}>
             <Box
                 sx={{
+                    position: 'relative',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -30,6 +42,25 @@ const AttractionInfoWindow = ({
                     maxWidth: '300px',
                 }}
             >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        left: 8,
+                        zIndex: 1,
+                    }}
+                >
+                    <Tooltip title='See Events'>
+                        <IconButton
+                            color='primary'
+                            onClick={() => nav('/events/' + attraction.id)}
+                            size='small'
+                        >
+                            <EventIcon fontSize='small' />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+
                 <Typography
                     variant='h6'
                     align='center'
@@ -37,7 +68,7 @@ const AttractionInfoWindow = ({
                         color: '#393939',
                         fontWeight: 'bold',
                         mb: 1,
-                        mt: 0, // remove top margin to avoid too much free space
+                        mt: 0,
                     }}
                 >
                     {attraction.name}

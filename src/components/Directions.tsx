@@ -1,7 +1,7 @@
 import {useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import {Attraction} from '../types';
+import {AttractionWithPrice} from '../types';
 
 function Directions({
     selectedPosition,
@@ -26,8 +26,8 @@ function Directions({
     legIndex: number;
     setDirections: (directions: google.maps.DirectionsResult | null) => void;
     directions: google.maps.DirectionsResult | null;
-    closeAttractions: Attraction[];
-    setCloseAttractions: (closeAttractions: Attraction[]) => void;
+    closeAttractions: AttractionWithPrice[];
+    setCloseAttractions: (closeAttractions: AttractionWithPrice[]) => void;
     maxDistance: number;
     maxPrice: number;
     minRating: number;

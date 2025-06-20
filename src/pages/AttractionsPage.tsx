@@ -16,7 +16,7 @@ import AttractionsFiltersPanel from '../components/AttractionsFiltersPanel';
 import Footer from '../components/Footer';
 import LoadingScreen from '../components/LoadingScreen';
 import TopNavBar from '../components/TopNavBar';
-import {Attraction, City, State} from '../types';
+import {AttractionWithLocation, City, State} from '../types';
 
 function AttractionsPage() {
     const [refetch, setRefetch] = useState(false);
@@ -59,7 +59,9 @@ function AttractionsPage() {
     const PAGE_ATTRACTIONS = 10;
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [attractions, setAttractions] = useState<Attraction[]>([]);
+    const [attractions, setAttractions] = useState<AttractionWithLocation[]>(
+        [],
+    );
     const [sortingOption, setSortingOption] = useState<string>('');
     const [totalAttractions, setTotalAttractions] = useState<number>(0);
 
@@ -86,7 +88,8 @@ function AttractionsPage() {
                 console.log(response.data);
                 setAttractions(
                     response.data.map(
-                        (attraction: any) => new Attraction(attraction),
+                        (attraction: any) =>
+                            new AttractionWithLocation(attraction),
                     ),
                 );
             });

@@ -8,13 +8,13 @@ import {
     Typography,
 } from '@mui/material';
 import {useState} from 'react';
-import {Attraction} from '../types';
+import {AttractionWithPrice} from '../types';
 
 interface RouteInfoCardProps {
     directions: google.maps.DirectionsResult | null;
     selectedRoute: google.maps.DirectionsRoute;
     legIndex: number;
-    closeAttractions: Attraction[];
+    closeAttractions: AttractionWithPrice[];
     onNextLeg: () => void;
 }
 
@@ -49,10 +49,24 @@ const RouteInfoCard = ({
         0,
     );
 
+    const totalPrice = closeAttractions.reduce(
+        (acc, attraction) => acc + (attraction.price || 0),
+        0,
+    );
+
     const getAttractionName = (index: number) => {
         const waypointIndex = selectedRoute?.waypoint_order?.[index];
         return waypointIndex !== undefined && closeAttractions[waypointIndex]
             ? closeAttractions[waypointIndex].name
+            : 'Unknown';
+    };
+
+    const getAttractionPrice = (index: number) => {
+        const waypointIndex = selectedRoute?.waypoint_order?.[index];
+        return waypointIndex !== undefined && closeAttractions[waypointIndex]
+            ? closeAttractions[waypointIndex].price > 0
+                ? closeAttractions[waypointIndex].price + '$'
+                : 'Free'
             : 'Unknown';
     };
 
@@ -126,6 +140,15 @@ const RouteInfoCard = ({
                                         {formatDuration(totalDuration || 0)}
                                     </Typography>
                                     <Typography
+                                        variant='subtitle2'
+                                        color='textSecondary'
+                                    >
+                                        Total price:{' '}
+                                        {totalPrice > 0
+                                            ? `${totalPrice}$`
+                                            : 'Free'}
+                                    </Typography>
+                                    <Typography
                                         sx={{marginTop: 1}}
                                         variant='subtitle1'
                                     >
@@ -169,6 +192,16 @@ const RouteInfoCard = ({
                                         {selectedRoute.legs?.[legIndex]
                                             ?.duration?.text || 'N/A'}
                                     </Typography>
+                                    {legIndex <
+                                        selectedRoute.legs.length - 1 && (
+                                        <Typography
+                                            variant='body2'
+                                            color='textPrimary'
+                                        >
+                                            Price:{' '}
+                                            {getAttractionPrice(legIndex)}
+                                        </Typography>
+                                    )}
                                     <Button
                                         sx={{marginTop: 1}}
                                         onClick={onNextLeg}

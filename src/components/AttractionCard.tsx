@@ -16,10 +16,10 @@ import {
     Typography,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {Attraction} from '../types';
+import {AttractionWithLocation} from '../types';
 
 interface AttractionCardProps {
-    attraction: Attraction;
+    attraction: AttractionWithLocation;
     userType: string;
     handleDelete: (id: string) => void;
 }
@@ -51,6 +51,9 @@ const AttractionCard = ({
                 <CardContent>
                     <Typography gutterBottom variant='h5' component='div'>
                         {attraction.name}
+                    </Typography>
+                    <Typography variant='body2' color='textSecondary'>
+                        {attraction.cityName}, {attraction.stateName}
                     </Typography>
                     {userType === 'admin' && (
                         <Typography variant='body2' color='textSecondary'>

@@ -16,7 +16,7 @@ import PlacesAutocompleteBox from '../components/PlacesAutocompleteBox';
 import RouteInfoCard from '../components/RouteInfoCard';
 import UserMarker from '../components/UserMarker';
 import UserPromptInput from '../components/UserPrompInput';
-import {Attraction, MapPosition} from '../types';
+import {Attraction, AttractionWithPrice, MapPosition} from '../types';
 
 const MapPage = () => {
     // Check user has access
@@ -67,7 +67,9 @@ const MapPage = () => {
     const [directions, setDirections] =
         useState<google.maps.DirectionsResult | null>(null);
     const selectedRoute = routes[routeIndex];
-    const [closeAttractions, setCloseAttractions] = useState<Attraction[]>([]);
+    const [closeAttractions, setCloseAttractions] = useState<
+        AttractionWithPrice[]
+    >([]);
     const [minRating, setMinRating] = useState(0);
     const [maxAttractions, setMaxAttractions] = useState(9);
     const [maxPrice, setMaxPrice] = useState(1000);
